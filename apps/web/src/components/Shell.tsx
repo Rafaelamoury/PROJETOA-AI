@@ -14,6 +14,7 @@ const links = [
   { href: "/produtos", label: "Produtos" },
   { href: "/plantas", label: "Plantas" },
   { href: "/planejamento", label: "Planejamento" },
+  { href: "/como-usar", label: "Como usar" },
 ];
 
 export function Shell({ children, user }: { children: React.ReactNode; user: Sessao | null }) {
