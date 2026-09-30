@@ -9,13 +9,26 @@ using Microsoft.IdentityModel.Tokens;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrEmpty(port))
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+
 builder.Services.AddControllers().AddJsonOptions(o =>
 {
     o.JsonSerializerOptions.Converters.Add(new JsonStringEnumConverter());
 });
 builder.Services.AddOpenApi();
-builder.Services.AddDbContext<AppDbContext>(opt =>
-    opt.UseSqlite(builder.Configuration.GetConnectionString("Default") ?? "Data Source=acai.db"));
+
+var volume = Environment.GetEnvironmentVariable("RAILWAY_VOLUME_MOUNT_PATH");
+var sqlite = !string.IsNullOrEmpty(volume)
+    ? $"Data Source={Path.Combine(volume, "acai.db")}"
+    : (builder.Configuration.GetConnectionString("Default") ?? "Data Source=acai.db");
+var dataFile = sqlite.Replace("Data Source=", "", StringComparison.OrdinalIgnoreCase).Trim().TrimEnd(';');
+var dataDir = Path.GetDirectoryName(dataFile);
+if (!string.IsNullOrWhiteSpace(dataDir))
+    Directory.CreateDirectory(dataDir);
+
+builder.Services.AddDbContext<AppDbContext>(opt => opt.UseSqlite(sqlite));
 builder.Services.AddSingleton<TokenService>();
 var jwtKey = builder.Configuration["Jwt:Key"] ?? "sitio-acai-chave-dev-minimo-32-caracteres!";
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
@@ -40,7 +53,7 @@ builder.Services.AddAuthorization(o =>
 builder.Services.AddCors(opt =>
 {
     opt.AddPolicy("frontend", p => p
-        .WithOrigins("http://localhost:3000", "http://127.0.0.1:3000")
+        .SetIsOriginAllowed(_ => true)
         .AllowAnyHeader()
         .AllowAnyMethod());
 });

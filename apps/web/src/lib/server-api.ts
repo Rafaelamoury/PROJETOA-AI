@@ -1,7 +1,8 @@
+import { apiBase } from "@/lib/api-base";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const API = "http://127.0.0.1:5043/api";
+const API = apiBase();
 
 export async function apiGet<T>(path: string): Promise<T> {
   const token = (await cookies()).get("acai_token")?.value;

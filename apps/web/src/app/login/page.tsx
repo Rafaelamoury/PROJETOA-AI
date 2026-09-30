@@ -22,7 +22,7 @@ export default async function LoginPage({
       >
         <p style={{ letterSpacing: "0.16em", fontSize: 11, color: "#4a1c6b", margin: 0 }}>RR AÇAÍ</p>
         <h1 style={{ fontFamily: "Georgia, serif", margin: "0 0 8px" }}>Entrar</h1>
-        <p style={{ margin: 0, fontSize: 14 }}>Acesso com CPF e senha.</p>
+        <p style={{ margin: 0, fontSize: 14 }}>Acesso com CPF e senha. Se outra pessoa criou seu usuario, use o CPF e a senha que ela passou.</p>
         {q.erro && <p style={{ color: "#8a1c1c", margin: 0 }}>{q.erro}</p>}
         <input name="cpf" placeholder="CPF" required autoComplete="username" style={{ padding: 10, borderRadius: 8, border: "1px solid #e4d9c8" }} />
         <input name="senha" type="password" placeholder="Senha" required autoComplete="current-password" style={{ padding: 10, borderRadius: 8, border: "1px solid #e4d9c8" }} />

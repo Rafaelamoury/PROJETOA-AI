@@ -1,10 +1,11 @@
 ﻿"use server";
 
+import { apiBase } from "@/lib/api-base";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 
-const API = "http://127.0.0.1:5043/api";
+const API = apiBase();
 
 async function authHeaders(): Promise<Record<string, string>> {
   const token = (await cookies()).get("acai_token")?.value;
@@ -50,6 +51,7 @@ export async function entrar(formData: FormData) {
     sameSite: "lax",
     path: "/",
     maxAge: 60 * 60 * 24 * 7,
+    secure: process.env.NODE_ENV === "production",
   });
   redirect("/");
 }
