@@ -1,0 +1,13 @@
+﻿bin/
+obj/
+*.db
+*.db-shm
+*.db-wal
+node_modules/
+.next/
+.expo/
+dist/
+.DS_Store
+*.user
+**/acai.db
+_write1.js

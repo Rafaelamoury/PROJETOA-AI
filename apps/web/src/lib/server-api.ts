@@ -1,0 +1,30 @@
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+
+const API = "http://127.0.0.1:5043/api";
+
+export async function apiGet<T>(path: string): Promise<T> {
+  const token = (await cookies()).get("acai_token")?.value;
+  if (!token) redirect("/login");
+  const res = await fetch(`${API}${path}`, {
+    cache: "no-store",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (res.status === 401) redirect("/login");
+  if (res.status === 403) redirect("/");
+  if (!res.ok) throw new Error("API");
+  return res.json();
+}
+
+export type Sessao = { id: number; nome: string; cpf: string; isAdmin: boolean };
+
+export async function getSessao(): Promise<Sessao | null> {
+  const token = (await cookies()).get("acai_token")?.value;
+  if (!token) return null;
+  const res = await fetch(`${API}/auth/me`, {
+    cache: "no-store",
+    headers: { Authorization: `Bearer ${token}` },
+  });
+  if (!res.ok) return null;
+  return res.json();
+}
