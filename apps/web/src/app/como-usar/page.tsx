@@ -55,9 +55,9 @@ export default function ComoUsarPage() {
       </Bloco>
 
       <Bloco n="8" titulo="Plantas">
-        Informe os pés pequeno, médio e grande, e os que já produzem. Cada pé que já produz bota 1 cacho por mês.
-        Diga quantos cachos formam uma lata e quantos meses o cacho leva para ficar maduro. A aba mostra a média de
-        latas e o faturamento do trimestre, semestre, nove meses e ano, usando o valor da lata já lançado em Produção.
+        Informe os pés pequeno, médio e grande, e os que já produzem. A previsão soma médio e grande, conta 2 palmeiras
+        por pé e soma os pés que têm uma terceira. O cacho não fica maduro antes do prazo, e o intervalo entre um cacho
+        e outro pode passar de um mês. A aba mostra latas e faturamento do trimestre, semestre, nove meses e ano.
       </Bloco>
 
       <Bloco n="9" titulo="Planejamento">

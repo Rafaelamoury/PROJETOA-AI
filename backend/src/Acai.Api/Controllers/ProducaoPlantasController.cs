@@ -103,8 +103,8 @@ public class PlantasController(AppDbContext db) : ControllerBase
     {
         if (body.QuantidadePequeno < 0 || body.QuantidadeMedio < 0 || body.QuantidadeGrande < 0 || body.QuantidadeJaProduzem < 0)
             return BadRequest(new { erro = "Quantidades nao podem ser negativas." });
-        if (body.CachosPorLata < 0 || body.MesesParaMadurar < 0)
-            return BadRequest(new { erro = "Cachos por lata e meses para madurar nao podem ser negativos." });
+        if (body.CachosPorLata < 0 || body.MesesParaMadurar < 0 || body.PalmeirasPorPe < 0 || body.PesComTresPalmeiras < 0 || body.MesesEntreCachos < 0)
+            return BadRequest(new { erro = "Os numeros da conta nao podem ser negativos." });
 
         var e = await db.EstoquesPlantas.FirstAsync(ct);
         e.QuantidadePequeno = body.QuantidadePequeno;
@@ -113,6 +113,9 @@ public class PlantasController(AppDbContext db) : ControllerBase
         e.QuantidadeJaProduzem = body.QuantidadeJaProduzem;
         e.CachosPorLata = body.CachosPorLata;
         e.MesesParaMadurar = body.MesesParaMadurar;
+        e.PalmeirasPorPe = body.PalmeirasPorPe;
+        e.PesComTresPalmeiras = body.PesComTresPalmeiras;
+        e.MesesEntreCachos = body.MesesEntreCachos;
         await db.SaveChangesAsync(ct);
         return await Montar(e, ct);
     }
@@ -130,6 +133,10 @@ public class PlantasController(AppDbContext db) : ControllerBase
             e.QuantidadeJaProduzem,
             e.CachosPorLata,
             e.MesesParaMadurar,
+            e.PalmeirasPorPe,
+            e.PesComTresPalmeiras,
+            e.MesesEntreCachos,
+            Palmeiras(e),
             previsoes);
     }
 
@@ -140,7 +147,8 @@ public class PlantasController(AppDbContext db) : ControllerBase
         int meses,
         string periodo)
     {
-        var cachos = (decimal)e.QuantidadeJaProduzem * meses;
+        var ondas = OndasQueAmadurecem(meses, e.MesesParaMadurar, e.MesesEntreCachos);
+        var cachos = (decimal)Palmeiras(e) * ondas;
         var latas = e.CachosPorLata > 0 ? Math.Round(cachos / e.CachosPorLata, 2) : 0m;
         var inicio = hoje.AddMonths(-meses);
         var noPeriodo = producoes.Where(p => Data(p) >= inicio && Data(p) <= hoje).ToList();
@@ -149,6 +157,18 @@ public class PlantasController(AppDbContext db) : ControllerBase
         var valor = doPeriodo ?? geral;
         var faturamento = valor is null ? (decimal?)null : Math.Round(latas * valor.Value, 2);
         return new(meses, periodo, cachos, latas, valor is null ? null : Math.Round(valor.Value, 2), faturamento, doPeriodo is null && geral is not null);
+    }
+
+    private static int Palmeiras(EstoquePlantas e) =>
+        Math.Max(0, e.QuantidadeMedio + e.QuantidadeGrande) * Math.Max(0, e.PalmeirasPorPe) + Math.Max(0, e.PesComTresPalmeiras);
+
+    private static int OndasQueAmadurecem(int horizonteMeses, int mesesParaMadurar, int mesesEntreCachos)
+    {
+        if (horizonteMeses < 1 || mesesParaMadurar < 1 || mesesEntreCachos < 1) return 0;
+        var ondas = 0;
+        for (var nasce = 0; nasce + mesesParaMadurar <= horizonteMeses; nasce += mesesEntreCachos)
+            ondas++;
+        return ondas;
     }
 
     private static DateOnly Data(ProducaoMensal p)

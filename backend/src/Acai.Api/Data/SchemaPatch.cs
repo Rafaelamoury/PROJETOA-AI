@@ -10,6 +10,9 @@ public static class SchemaPatch
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN QuantidadeJaProduzem INTEGER NOT NULL DEFAULT 0");
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN CachosPorLata INTEGER NOT NULL DEFAULT 0");
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN MesesParaMadurar INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN PalmeirasPorPe INTEGER NOT NULL DEFAULT 2");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN PesComTresPalmeiras INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN MesesEntreCachos INTEGER NOT NULL DEFAULT 2");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ProducaoMensalId INTEGER NULL");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN DiasAtividade INTEGER NULL");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN PessoasDetalhe TEXT NULL");

@@ -23,6 +23,10 @@ export type Plantas = {
   quantidadeJaProduzem: number;
   cachosPorLata: number;
   mesesParaMadurar: number;
+  palmeirasPorPe: number;
+  pesComTresPalmeiras: number;
+  mesesEntreCachos: number;
+  palmeiras: number;
   previsoes: PrevisaoPlantio[];
 };
 

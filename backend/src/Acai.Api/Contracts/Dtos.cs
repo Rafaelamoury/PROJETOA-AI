@@ -68,6 +68,10 @@ public record PlantasResposta(
     int QuantidadeJaProduzem,
     int CachosPorLata,
     int MesesParaMadurar,
+    int PalmeirasPorPe,
+    int PesComTresPalmeiras,
+    int MesesEntreCachos,
+    int Palmeiras,
     IReadOnlyList<PrevisaoPlantio> Previsoes);
 public record SalvarPlantas(
     int QuantidadePequeno,
@@ -75,7 +79,10 @@ public record SalvarPlantas(
     int QuantidadeGrande,
     int QuantidadeJaProduzem,
     int CachosPorLata,
-    int MesesParaMadurar);
+    int MesesParaMadurar,
+    int PalmeirasPorPe,
+    int PesComTresPalmeiras,
+    int MesesEntreCachos);
 public record MesOperacaoResposta(
     int Mes,
     string Nome,

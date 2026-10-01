@@ -197,6 +197,9 @@ export async function salvarPlantas(formData: FormData) {
     quantidadeJaProduzem: Number(formData.get("quantidadeJaProduzem")),
     cachosPorLata: Number(formData.get("cachosPorLata") || 0),
     mesesParaMadurar: Number(formData.get("mesesParaMadurar") || 0),
+    palmeirasPorPe: Number(formData.get("palmeirasPorPe") || 0),
+    pesComTresPalmeiras: Number(formData.get("pesComTresPalmeiras") || 0),
+    mesesEntreCachos: Number(formData.get("mesesEntreCachos") || 0),
   });
   revalidatePath("/plantas");
   revalidatePath("/");
