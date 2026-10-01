@@ -56,19 +56,24 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
         </label>
       </div>
 
-      <div
-        style={{
-          marginTop: 20,
-          padding: "18px 22px",
-          borderRadius: 16,
-          background: "#4a1c6b",
-          color: "#fffdf8",
-        }}
-      >
-        <p style={{ fontFamily: "Georgia, serif", fontSize: 28, lineHeight: 1.35, margin: 0 }}>
+      <p style={{ margin: "20px 0 0", maxWidth: "100%" }}>
+        <span
+          style={{
+            display: "inline",
+            background: "#4a1c6b",
+            color: "#fffdf8",
+            fontFamily: "Georgia, serif",
+            fontSize: 20,
+            lineHeight: 1.7,
+            padding: "6px 12px",
+            borderRadius: 10,
+            boxDecorationBreak: "clone",
+            WebkitBoxDecorationBreak: "clone",
+          }}
+        >
           <strong>Frase do dia:</strong> {frase}
-        </p>
-      </div>
+        </span>
+      </p>
 
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", margin: "20px 0 24px" }}>
         {meses.map((m) => {
