@@ -71,6 +71,13 @@ export async function criarUsuario(formData: FormData) {
   revalidatePath("/usuarios");
 }
 
+export async function alterarAdmin(formData: FormData) {
+  await post(`/usuarios/${formData.get("id")}/admin`, "PUT", {
+    isAdmin: formData.get("isAdmin") === "true",
+  });
+  revalidatePath("/usuarios");
+}
+
 export async function atualizarSaldo(formData: FormData) {
   await post("/caixa/saldo-inicial", "PUT", { saldoInicial: Number(formData.get("saldoInicial")) });
   revalidatePath("/caixa");
@@ -128,8 +135,7 @@ export async function excluirProduto(formData: FormData) {
 
 export async function salvarProducao(formData: FormData) {
   await post("/producoes", "POST", {
-    ano: Number(formData.get("ano")),
-    mes: Number(formData.get("mes")),
+    data: String(formData.get("data")),
     quantidadeLatas: Number(formData.get("quantidadeLatas")),
     valorLata: Number(formData.get("valorLata")),
     custosExtracao: Number(formData.get("custosExtracao")),

@@ -14,6 +14,7 @@ public record ProducaoResposta(
     int Id,
     int Ano,
     int Mes,
+    int Dia,
     decimal QuantidadeLatas,
     decimal ValorLata,
     decimal CustosExtracao,
@@ -22,7 +23,7 @@ public record ProducaoResposta(
     decimal ValorLiquido,
     decimal ValorProducao,
     decimal? CustoPorLata);
-public record SalvarProducao(int Ano, int Mes, decimal QuantidadeLatas, decimal ValorLata, decimal CustosExtracao);
+public record SalvarProducao(DateOnly Data, decimal QuantidadeLatas, decimal ValorLata, decimal CustosExtracao);
 public record PlantasResposta(int QuantidadePequeno, int QuantidadeMedio, int QuantidadeGrande, int Total, int QuantidadeJaProduzem);
 public record SalvarPlantas(int QuantidadePequeno, int QuantidadeMedio, int QuantidadeGrande, int QuantidadeJaProduzem);
 public record MesOperacaoResposta(
@@ -48,5 +49,6 @@ public record LoginPedido(string Cpf, string Senha);
 public record LoginResposta(string Token, string Nome, string Cpf, bool IsAdmin);
 public record UsuarioResposta(int Id, string Nome, string Cpf, bool IsAdmin);
 public record CriarUsuarioPedido(string Nome, string Cpf, string Senha, bool IsAdmin);
+public record AlterarAdminPedido(bool IsAdmin);
 public record AtividadePlanejamentoResposta(int Id, int Ano, EscalaPlanejamento Escala, int Periodo, string Titulo, string? Detalhe);
 public record SalvarAtividadePlanejamento(int Ano, EscalaPlanejamento Escala, int Periodo, string Titulo, string? Detalhe);

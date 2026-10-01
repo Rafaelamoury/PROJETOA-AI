@@ -38,6 +38,7 @@ public class ProducaoMensal
     public int Id { get; set; }
     public int Ano { get; set; }
     public int Mes { get; set; }
+    public int Dia { get; set; } = 1;
     public decimal QuantidadeLatas { get; set; }
     public decimal ValorLata { get; set; }
     public decimal CustosExtracao { get; set; }

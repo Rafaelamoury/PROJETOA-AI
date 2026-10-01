@@ -42,11 +42,11 @@ public class PainelController(AppDbContext db) : ControllerBase
 
         var meses = Enumerable.Range(1, 12).Select(mesNum =>
         {
-            var prod = producoes.FirstOrDefault(p => p.Mes == mesNum);
+            var doMesProd = producoes.Where(p => p.Mes == mesNum).ToList();
             var doMes = lancamentos.Where(l => l.Data.Month == mesNum).ToList();
-            var latas = prod?.QuantidadeLatas ?? 0;
-            var receita = prod?.ValorBruto ?? 0;
-            var extracao = prod?.CustosExtracao ?? 0;
+            var latas = doMesProd.Sum(p => p.QuantidadeLatas);
+            var receita = doMesProd.Sum(p => p.ValorBruto);
+            var extracao = doMesProd.Sum(p => p.CustosExtracao);
             var campo = doMes
                 .Where(l => l.Tipo == TipoLancamento.CustoOperacional && l.ProducaoMensalId == null)
                 .Sum(l => l.Valor);

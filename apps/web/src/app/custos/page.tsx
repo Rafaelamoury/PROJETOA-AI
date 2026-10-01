@@ -1,4 +1,4 @@
-import { brl } from "@/lib/api";
+import { brl, dataIsoBr, hojeLocal } from "@/lib/api";
 import type { Lancamento, Servico } from "@/lib/types";
 import { criarLancamento, excluirLancamento } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
@@ -9,7 +9,7 @@ export default async function CustosPage() {
     apiGet<Lancamento[]>("/lancamentos"),
     apiGet<Servico[]>("/servicos"),
   ]);
-  const hoje = new Date().toISOString().slice(0, 10);
+  const hoje = hojeLocal();
   const custos = lista.filter((l) => l.tipo === "CustoOperacional" || l.tipo === "MaoObra");
 
   return (
@@ -77,7 +77,7 @@ export default async function CustosPage() {
         <tbody>
           {custos.map((l) => (
             <tr key={l.id} style={{ borderBottom: "1px solid #f0e8da" }}>
-              <td>{l.data}</td>
+              <td>{dataIsoBr(l.data)}</td>
               <td>{l.tipo}</td>
               <td>
                 {l.descricao}

@@ -1,4 +1,4 @@
-﻿import { brl } from "@/lib/api";
+﻿import { brl, dataIsoBr, hojeLocal } from "@/lib/api";
 import type { Caixa, Lancamento } from "@/lib/types";
 import { atualizarSaldo, criarLancamento, excluirLancamento } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
@@ -6,7 +6,7 @@ import { LancarModal, botaoAdicionar, campo, inputCampo } from "@/components/Lan
 
 export default async function CaixaPage() {
   const [caixa, lista] = await Promise.all([apiGet<Caixa>("/caixa"), apiGet<Lancamento[]>("/lancamentos")]);
-  const hoje = new Date().toISOString().slice(0, 10);
+  const hoje = hojeLocal();
 
   return (
     <div>
@@ -74,7 +74,7 @@ export default async function CaixaPage() {
         <tbody>
           {lista.map((l) => (
             <tr key={l.id} style={{ borderBottom: "1px solid #f0e8da" }}>
-              <td>{l.data}</td>
+              <td>{dataIsoBr(l.data)}</td>
               <td>{l.tipo}</td>
               <td>
                 {l.descricao}

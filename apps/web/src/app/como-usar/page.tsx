@@ -40,8 +40,8 @@ export default function ComoUsarPage() {
       </Bloco>
 
       <Bloco n="7" titulo="Produção">
-        Um lançamento por mês: quantidade de latas, valor da lata e custo total para tirar. O sistema calcula custo por
-        lata e líquido. Entra o valor das latas no caixa e sai o custo de tirar. Errou o mês? Exclua e lance de novo.
+        Informe o dia em que o açaí foi tirado, a quantidade de latas, o valor da lata e o custo total. O caixa recebe o
+        valor e o custo nessa data. Pode lançar vários dias no mesmo mês. Errou o dia? Exclua e lance de novo.
       </Bloco>
 
       <Bloco n="8" titulo="Plantas">
@@ -53,7 +53,8 @@ export default function ComoUsarPage() {
       </Bloco>
 
       <Bloco n="10" titulo="Usuarios (só admin)">
-        Nome, CPF e senha da outra pessoa. Não marque administrador, a menos que ela também possa criar acesso.
+        Nome, CPF e senha da outra pessoa. Quem já existe pode virar administrador pelo botão na lista. Ela precisa sair
+        e entrar de novo para o menu aparecer.
       </Bloco>
     </div>
   );

@@ -6,15 +6,22 @@ namespace Acai.Api.Services;
 
 public static class ProducaoCaixa
 {
+    public static DateOnly DataDaProducao(ProducaoMensal p)
+    {
+        var ultimo = DateTime.DaysInMonth(p.Ano, p.Mes);
+        var dia = p.Dia < 1 ? 1 : Math.Min(p.Dia, ultimo);
+        return new DateOnly(p.Ano, p.Mes, dia);
+    }
+
     public static void GerarLancamentos(AppDbContext db, ProducaoMensal p)
     {
-        var data = new DateOnly(p.Ano, p.Mes, 1);
-        var mes = $"{p.Mes:00}/{p.Ano}";
+        var data = DataDaProducao(p);
+        var quando = data.ToString("dd/MM/yyyy");
         db.Lancamentos.Add(new Lancamento
         {
             Data = data,
             Tipo = TipoLancamento.EntradaCaixa,
-            Descricao = $"Producao {mes} - acai tirado (latas x valor lancado)",
+            Descricao = $"Producao {quando} - acai tirado (latas x valor lancado)",
             Valor = p.ValorBruto,
             ProducaoMensalId = p.Id
         });
@@ -22,7 +29,7 @@ public static class ProducaoCaixa
         {
             Data = data,
             Tipo = TipoLancamento.CustoOperacional,
-            Descricao = $"Producao {mes} - custo para tirar acai",
+            Descricao = $"Producao {quando} - custo para tirar acai",
             Valor = p.CustosExtracao,
             ProducaoMensalId = p.Id
         });

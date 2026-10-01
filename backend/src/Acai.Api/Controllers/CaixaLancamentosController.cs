@@ -82,7 +82,7 @@ public class LancamentosController(AppDbContext db) : ControllerBase
         var entity = await db.Lancamentos.FindAsync([id], ct);
         if (entity is null) return NotFound();
         if (entity.ProducaoMensalId is not null)
-            return BadRequest(new { erro = "Este lancamento veio da producao. Exclua o mes em Producao." });
+            return BadRequest(new { erro = "Este lancamento veio da producao. Exclua a data em Producao." });
         db.Lancamentos.Remove(entity);
         await db.SaveChangesAsync(ct);
         return NoContent();

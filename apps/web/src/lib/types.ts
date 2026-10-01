@@ -17,6 +17,7 @@ export type Producao = {
   id: number;
   ano: number;
   mes: number;
+  dia: number;
   quantidadeLatas: number;
   valorLata: number;
   custosExtracao: number;

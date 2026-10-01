@@ -1,5 +1,5 @@
 import { apiGet, getSessao } from "@/lib/server-api";
-import { criarUsuario } from "@/app/actions";
+import { alterarAdmin, criarUsuario } from "@/app/actions";
 import { redirect } from "next/navigation";
 import { LancarModal, botaoAdicionar, campo, inputCampo } from "@/components/LancarModal";
 import { urlsNaRede } from "@/lib/rede";
@@ -18,7 +18,7 @@ export default async function UsuariosPage() {
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Usuarios</h2>
           <p style={{ maxWidth: 640 }}>
-            Voce cria o acesso. A outra pessoa entra na tela de login com o <strong>CPF</strong> e a <strong>senha</strong> que voce cadastrar. Nao marque administrador, a menos que ela tambem possa criar gente.
+            Voce cria o acesso. A outra pessoa entra na tela de login com o <strong>CPF</strong> e a <strong>senha</strong> que voce cadastrar. Quem ja existe pode virar administrador sem criar de novo. A pessoa precisa sair e entrar de novo para o menu Usuarios aparecer.
           </p>
         </div>
         <LancarModal titulo="Novo usuario" botao="+ Criar usuario" dica="Depois de adicionar, a aba continua aberta.">
@@ -72,8 +72,46 @@ export default async function UsuariosPage() {
       </div>
 
       {lista.map((u) => (
-        <div key={u.id} style={{ padding: 12, background: "#fffdf8", borderRadius: 10, marginBottom: 8, border: "1px solid #e4d9c8" }}>
-          <strong>{u.nome}</strong> · CPF {u.cpf} · {u.isAdmin ? "admin" : "usuario"}
+        <div
+          key={u.id}
+          style={{
+            padding: 12,
+            background: "#fffdf8",
+            borderRadius: 10,
+            marginBottom: 8,
+            border: "1px solid #e4d9c8",
+            display: "flex",
+            justifyContent: "space-between",
+            alignItems: "center",
+            gap: 12,
+            flexWrap: "wrap",
+          }}
+        >
+          <div>
+            <strong>{u.nome}</strong> · CPF {u.cpf} · {u.isAdmin ? "administrador" : "usuario"}
+            {u.id === sessao.id ? " · voce" : ""}
+          </div>
+          {u.isAdmin && u.id !== sessao.id ? (
+            <form action={alterarAdmin}>
+              <input type="hidden" name="id" value={u.id} />
+              <input type="hidden" name="isAdmin" value="false" />
+              <button type="submit" style={{ border: "1px solid #e4d9c8", background: "transparent", borderRadius: 8, padding: "8px 12px" }}>
+                Tirar administrador
+              </button>
+            </form>
+          ) : null}
+          {!u.isAdmin ? (
+            <form action={alterarAdmin}>
+              <input type="hidden" name="id" value={u.id} />
+              <input type="hidden" name="isAdmin" value="true" />
+              <button
+                type="submit"
+                style={{ background: "#4a1c6b", color: "white", border: 0, borderRadius: 8, padding: "8px 12px", fontWeight: 600 }}
+              >
+                Tornar administrador
+              </button>
+            </form>
+          ) : null}
         </div>
       ))}
     </div>

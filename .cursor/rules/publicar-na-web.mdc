@@ -1,0 +1,16 @@
+---
+description: Depois de alterar este projeto, enviar ao GitHub para a web atualizar
+alwaysApply: true
+---
+
+# Publicar na web
+
+O site publicado (Railway e Vercel) só atualiza o que está no GitHub, na branch `main`.
+
+Depois de concluir uma alteração neste repositório:
+
+1. Faça commit das mudanças do pedido, sem segredos (`.env`, senhas, banco local).
+2. Envie com `git push` para `origin` `main`.
+3. Não use force push.
+
+A API na Railway aplica a coluna nova do banco ao subir. A tela só muda depois desse envio.

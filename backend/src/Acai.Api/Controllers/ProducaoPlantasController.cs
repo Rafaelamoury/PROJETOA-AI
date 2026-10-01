@@ -15,7 +15,7 @@ public class ProducoesController(AppDbContext db) : ControllerBase
     public async Task<ActionResult<IEnumerable<ProducaoResposta>>> List(CancellationToken ct)
     {
         var items = await db.ProducoesMensais.AsNoTracking()
-            .OrderByDescending(p => p.Ano).ThenByDescending(p => p.Mes)
+            .OrderByDescending(p => p.Ano).ThenByDescending(p => p.Mes).ThenByDescending(p => p.Dia)
             .ToListAsync(ct);
         return items.Select(Map).ToList();
     }
@@ -23,14 +23,16 @@ public class ProducoesController(AppDbContext db) : ControllerBase
     [HttpPost]
     public async Task<ActionResult<ProducaoResposta>> Create(SalvarProducao body, CancellationToken ct)
     {
-        if (body.Mes is < 1 or > 12) return BadRequest(new { erro = "Mes invalido." });
-        var exists = await db.ProducoesMensais.AnyAsync(p => p.Ano == body.Ano && p.Mes == body.Mes, ct);
-        if (exists) return Conflict(new { erro = "Ja existe producao para este mes." });
+        if (body.Data.Year is < 2000 or > 2100) return BadRequest(new { erro = "Data invalida." });
+        var exists = await db.ProducoesMensais.AnyAsync(
+            p => p.Ano == body.Data.Year && p.Mes == body.Data.Month && p.Dia == body.Data.Day, ct);
+        if (exists) return Conflict(new { erro = "Ja existe producao nesta data. Exclua e lance de novo se errou." });
 
         var e = new ProducaoMensal
         {
-            Ano = body.Ano,
-            Mes = body.Mes,
+            Ano = body.Data.Year,
+            Mes = body.Data.Month,
+            Dia = body.Data.Day,
             QuantidadeLatas = body.QuantidadeLatas,
             ValorLata = body.ValorLata,
             CustosExtracao = body.CustosExtracao
@@ -57,7 +59,7 @@ public class ProducoesController(AppDbContext db) : ControllerBase
     }
 
     internal static ProducaoResposta Map(ProducaoMensal p) =>
-        new(p.Id, p.Ano, p.Mes, p.QuantidadeLatas, p.ValorLata, p.CustosExtracao, p.CustosExtracao,
+        new(p.Id, p.Ano, p.Mes, p.Dia, p.QuantidadeLatas, p.ValorLata, p.CustosExtracao, p.CustosExtracao,
             p.ValorBruto, p.ValorLiquido, p.ValorProducao, p.CustoPorLata);
 }
 

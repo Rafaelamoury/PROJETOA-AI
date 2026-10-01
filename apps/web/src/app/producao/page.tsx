@@ -1,64 +1,34 @@
-﻿import { brl, MESES, nomeMes } from "@/lib/api";
+﻿import { brl, dataBr } from "@/lib/api";
 import type { Producao } from "@/lib/types";
-import { excluirProducao, salvarProducao } from "@/app/actions";
+import { excluirProducao } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
-import { LancarModal, botaoAdicionar, campo, inputCampo } from "@/components/LancarModal";
+import { FormProducao } from "@/components/FormProducao";
+import { LancarModal } from "@/components/LancarModal";
 
 export default async function ProducaoPage() {
   const lista = await apiGet<Producao[]>("/producoes");
-  const now = new Date();
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Producao mensal</h2>
           <p>
-            Informe o custo total para tirar o acai. O sistema calcula custo por lata e valor liquido. Ao incluir, o
-            valor entra no caixa. Mes ja lancado: exclua e lance de novo se errou.
+            Escolha o mes e o dia em que o acai foi tirado. O valor das latas entra no caixa nessa data e o custo para
+            tirar sai no mesmo dia. Pode lancar varios dias no mesmo mes.
           </p>
         </div>
         <LancarModal
           titulo="Novo mes de producao"
           botao="+ Lancar producao"
-          dica="Depois de adicionar, a aba continua aberta para o proximo mes."
+          dica="Escolha o dia do mes. O caixa e os custos lancam nessa data. A aba continua aberta para outro dia."
         >
-          <form action={salvarProducao} style={{ display: "grid", gap: 12 }}>
-            <label style={campo}>
-              Ano
-              <input type="number" name="ano" defaultValue={now.getFullYear()} required style={inputCampo} />
-            </label>
-            <label style={campo}>
-              Mês
-              <select name="mes" defaultValue={now.getMonth() + 1} required style={inputCampo}>
-                {MESES.map((nome, i) => (
-                  <option key={nome} value={i + 1}>
-                    {nome}
-                  </option>
-                ))}
-              </select>
-            </label>
-            <label style={campo}>
-              Quantidade de latas
-              <input type="number" step="0.01" name="quantidadeLatas" required style={inputCampo} />
-            </label>
-            <label style={campo}>
-              Valor da lata
-              <input type="number" step="0.01" name="valorLata" required style={inputCampo} />
-            </label>
-            <label style={campo}>
-              Custo total para tirar o acai
-              <input type="number" step="0.01" name="custosExtracao" required style={inputCampo} />
-            </label>
-            <button type="submit" style={botaoAdicionar}>
-              Adicionar
-            </button>
-          </form>
+          <FormProducao />
         </LancarModal>
       </div>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
         <thead>
           <tr style={{ textAlign: "left", borderBottom: "1px solid #e4d9c8" }}>
-            <th>Mes</th>
+            <th>Data</th>
             <th>Latas</th>
             <th>Valor lata</th>
             <th>Custo total</th>
@@ -71,9 +41,7 @@ export default async function ProducaoPage() {
         <tbody>
           {lista.map((p) => (
             <tr key={p.id} style={{ borderBottom: "1px solid #f0e8da" }}>
-              <td>
-                {nomeMes(p.mes)} / {p.ano}
-              </td>
+              <td>{dataBr(p.ano, p.mes, p.dia)}</td>
               <td>{p.quantidadeLatas}</td>
               <td>{brl(p.valorLata)}</td>
               <td>{brl(p.custoTotal ?? p.custosExtracao)}</td>

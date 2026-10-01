@@ -1,3 +1,4 @@
+using System.Security.Claims;
 using Acai.Api.Contracts;
 using Acai.Api.Data;
 using Acai.Api.Domain;
@@ -71,5 +72,27 @@ public class UsuariosController(AppDbContext db) : ControllerBase
         db.Usuarios.Add(user);
         await db.SaveChangesAsync(ct);
         return CreatedAtAction(nameof(List), new UsuarioResposta(user.Id, user.Nome, user.Cpf, user.IsAdmin));
+    }
+
+    [HttpPut("{id:int}/admin")]
+    public async Task<ActionResult<UsuarioResposta>> AlterarAdmin(int id, AlterarAdminPedido body, CancellationToken ct)
+    {
+        var user = await db.Usuarios.FirstOrDefaultAsync(u => u.Id == id, ct);
+        if (user is null) return NotFound();
+
+        var meuId = int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier)!);
+        if (!body.IsAdmin && user.Id == meuId)
+            return BadRequest(new { erro = "Voce nao pode tirar o seu proprio acesso de administrador." });
+
+        if (!body.IsAdmin && user.IsAdmin)
+        {
+            var admins = await db.Usuarios.CountAsync(u => u.IsAdmin && u.Id != user.Id, ct);
+            if (admins == 0)
+                return BadRequest(new { erro = "Precisa existir ao menos um administrador." });
+        }
+
+        user.IsAdmin = body.IsAdmin;
+        await db.SaveChangesAsync(ct);
+        return new UsuarioResposta(user.Id, user.Nome, user.Cpf, user.IsAdmin);
     }
 }
