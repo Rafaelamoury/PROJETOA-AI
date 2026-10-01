@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type FormEvent } from "react";
 import { salvarProducao } from "@/app/actions";
-import { MESES, hojeLocal } from "@/lib/api";
+import { MESES, brl, hojeLocal } from "@/lib/api";
 import { botaoAdicionar, campo, inputCampo } from "@/components/LancarModal";
 
 function inicio() {
@@ -24,12 +24,15 @@ export function FormProducao({
     dia: number;
     quantidadeLatas: number;
     valorLata: number;
-    custosExtracao: number;
+    custoPorLata: number;
   };
 }) {
   const [quando, setQuando] = useState(() =>
     inicial ? { ano: inicial.ano, mes: inicial.mes, dia: inicial.dia } : inicio(),
   );
+  const [latas, setLatas] = useState(inicial ? String(inicial.quantidadeLatas) : "");
+  const [custoPorLata, setCustoPorLata] = useState(inicial ? String(inicial.custoPorLata) : "");
+  const totalGasto = Math.round((Number(latas) || 0) * (Number(custoPorLata) || 0) * 100) / 100;
   const totalDias = diasDoMes(quando.ano, quando.mes);
   const dia = Math.min(quando.dia, totalDias);
   const data = `${quando.ano}-${String(quando.mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
@@ -43,8 +46,18 @@ export function FormProducao({
     });
   }
 
+  async function enviar(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form = e.currentTarget;
+    await salvarProducao(new FormData(form));
+    setLatas("");
+    setCustoPorLata("");
+    const valor = form.elements.namedItem("valorLata");
+    if (valor instanceof HTMLInputElement) valor.value = "";
+  }
+
   return (
-    <form action={salvarProducao} style={{ display: "grid", gap: 12 }}>
+    <form onSubmit={enviar} style={{ display: "grid", gap: 12 }}>
       <input type="hidden" name="data" value={data} />
       {inicial ? <input type="hidden" name="id" value={inicial.id} /> : null}
       <label style={campo}>
@@ -81,16 +94,35 @@ export function FormProducao({
       </label>
       <label style={campo}>
         Quantidade de latas
-        <input type="number" step="0.01" name="quantidadeLatas" defaultValue={inicial?.quantidadeLatas} required style={inputCampo} />
+        <input
+          type="number"
+          step="0.01"
+          min={0}
+          name="quantidadeLatas"
+          value={latas}
+          required
+          onChange={(e) => setLatas(e.target.value)}
+          style={inputCampo}
+        />
       </label>
       <label style={campo}>
         Valor da lata
-        <input type="number" step="0.01" name="valorLata" defaultValue={inicial?.valorLata} required style={inputCampo} />
+        <input type="number" step="0.01" min={0} name="valorLata" defaultValue={inicial?.valorLata} required style={inputCampo} />
       </label>
       <label style={campo}>
-        Custo total para tirar o acai
-        <input type="number" step="0.01" name="custosExtracao" defaultValue={inicial?.custosExtracao} required style={inputCampo} />
+        Custo por lata
+        <input
+          type="number"
+          step="0.01"
+          min={0}
+          name="custoPorLata"
+          value={custoPorLata}
+          required
+          onChange={(e) => setCustoPorLata(e.target.value)}
+          style={inputCampo}
+        />
       </label>
+      <p style={{ margin: 0, color: "#5c4a32" }}>Total gasto: {brl(totalGasto)}</p>
       <button type="submit" style={botaoAdicionar}>
         {inicial ? "Salvar" : "Adicionar"}
       </button>

@@ -13,14 +13,15 @@ export default async function ProducaoPage() {
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Producao mensal</h2>
           <p>
-            Escolha o mes e o dia em que o acai foi tirado. O valor das latas entra no caixa nessa data e o custo para
-            tirar sai no mesmo dia. Pode lancar varios dias no mesmo mes. Use alterar para corrigir uma linha ja lancada.
+            Escolha o mes e o dia em que o acai foi tirado. Informe o custo de cada lata: o total gasto e a quantidade
+            vezes esse valor e sai do caixa no mesmo dia, junto com a entrada das latas. Pode lancar varios dias no mesmo
+            mes. Use alterar para corrigir uma linha ja lancada.
           </p>
         </div>
         <LancarModal
           titulo="Novo mes de producao"
           botao="+ Lancar producao"
-          dica="Escolha o dia do mes. O caixa e os custos lancam nessa data. A aba continua aberta para outro dia."
+          dica="Informe o custo por lata. O total gasto e calculado pela quantidade e lancado no caixa nesse dia."
         >
           <FormProducao />
         </LancarModal>
@@ -61,7 +62,7 @@ export default async function ProducaoPage() {
                         dia: p.dia || 1,
                         quantidadeLatas: p.quantidadeLatas,
                         valorLata: p.valorLata,
-                        custosExtracao: p.custosExtracao,
+                        custoPorLata: p.custoPorLata ?? (p.quantidadeLatas > 0 ? p.custosExtracao / p.quantidadeLatas : 0),
                       }}
                     />
                   </LancarModal>
