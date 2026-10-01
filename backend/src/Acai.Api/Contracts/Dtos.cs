@@ -24,6 +24,8 @@ public record ProducaoResposta(
     decimal ValorProducao,
     decimal? CustoPorLata);
 public record SalvarProducao(DateOnly Data, decimal QuantidadeLatas, decimal ValorLata, decimal CustosExtracao);
+public record CasaResposta(int Id, int Ano, int Mes, int Dia, decimal Quantidade, string QuemTirou);
+public record SalvarCasa(DateOnly Data, decimal Quantidade, string QuemTirou);
 public record PlantasResposta(int QuantidadePequeno, int QuantidadeMedio, int QuantidadeGrande, int Total, int QuantidadeJaProduzem);
 public record SalvarPlantas(int QuantidadePequeno, int QuantidadeMedio, int QuantidadeGrande, int QuantidadeJaProduzem);
 public record MesOperacaoResposta(

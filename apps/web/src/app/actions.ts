@@ -159,6 +159,23 @@ export async function excluirProducao(formData: FormData) {
   revalidatePath("/");
 }
 
+export async function salvarCasa(formData: FormData) {
+  const id = String(formData.get("id") || "");
+  const body = {
+    data: String(formData.get("data")),
+    quantidade: Number(formData.get("quantidade")),
+    quemTirou: String(formData.get("quemTirou") ?? "").trim(),
+  };
+  if (id) await post(`/casa/${id}`, "PUT", body);
+  else await post("/casa", "POST", body);
+  revalidatePath("/producao");
+}
+
+export async function excluirCasa(formData: FormData) {
+  await post(`/casa/${formData.get("id")}`, "DELETE");
+  revalidatePath("/producao");
+}
+
 export async function salvarPlantas(formData: FormData) {
   await post("/plantas", "PUT", {
     quantidadePequeno: Number(formData.get("quantidadePequeno")),

@@ -13,6 +13,17 @@ public static class SchemaPatch
         await TryAlter("DROP INDEX IF EXISTS \"IX_ProducoesMensais_Ano_Mes\"");
         await TryAlter(
             "CREATE UNIQUE INDEX IF NOT EXISTS \"IX_ProducoesMensais_Ano_Mes_Dia\" ON \"ProducoesMensais\" (\"Ano\", \"Mes\", \"Dia\")");
+        await TryAlter(
+            """
+            CREATE TABLE IF NOT EXISTS "RetiradasCasa" (
+                "Id" INTEGER NOT NULL CONSTRAINT "PK_RetiradasCasa" PRIMARY KEY AUTOINCREMENT,
+                "Ano" INTEGER NOT NULL,
+                "Mes" INTEGER NOT NULL,
+                "Dia" INTEGER NOT NULL,
+                "Quantidade" TEXT NOT NULL,
+                "QuemTirou" TEXT NOT NULL
+            );
+            """);
         try
         {
             await db.Database.ExecuteSqlRawAsync(

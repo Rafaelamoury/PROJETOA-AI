@@ -49,6 +49,16 @@ public class ProducaoMensal
     public decimal? CustoPorLata => QuantidadeLatas > 0 ? CustosExtracao / QuantidadeLatas : null;
 }
 
+public class RetiradaCasa
+{
+    public int Id { get; set; }
+    public int Ano { get; set; }
+    public int Mes { get; set; }
+    public int Dia { get; set; }
+    public decimal Quantidade { get; set; }
+    public string QuemTirou { get; set; } = string.Empty;
+}
+
 public class EstoquePlantas
 {
     public int Id { get; set; }

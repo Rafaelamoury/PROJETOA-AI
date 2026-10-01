@@ -28,6 +28,15 @@ export type Producao = {
   custoPorLata: number | null;
 };
 
+export type RetiradaCasa = {
+  id: number;
+  ano: number;
+  mes: number;
+  dia: number;
+  quantidade: number;
+  quemTirou: string;
+};
+
 export type MesOperacao = {
   mes: number;
   nome: string;

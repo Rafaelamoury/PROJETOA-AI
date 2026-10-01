@@ -1,8 +1,8 @@
 "use client";
 
 import { useState, type FormEvent } from "react";
-import { salvarProducao } from "@/app/actions";
-import { MESES, brl, hojeLocal } from "@/lib/api";
+import { salvarCasa } from "@/app/actions";
+import { MESES, hojeLocal } from "@/lib/api";
 import { botaoAdicionar, campo, inputCampo } from "@/components/LancarModal";
 
 function inicio() {
@@ -14,30 +14,31 @@ function diasDoMes(ano: number, mes: number) {
   return new Date(ano, mes, 0).getDate();
 }
 
-export function FormProducao({
+export function FormCasa({
   inicial,
   padrao,
+  nomes,
 }: {
   inicial?: {
     id: number;
     ano: number;
     mes: number;
     dia: number;
-    quantidadeLatas: number;
-    valorLata: number;
-    custoPorLata: number;
+    quantidade: number;
+    quemTirou: string;
   };
   padrao?: { ano: number; mes: number; dia: number };
+  nomes?: string[];
 }) {
   const [quando, setQuando] = useState(() =>
     inicial ? { ano: inicial.ano, mes: inicial.mes, dia: inicial.dia } : padrao ?? inicio(),
   );
-  const [latas, setLatas] = useState(inicial ? String(inicial.quantidadeLatas) : "");
-  const [custoPorLata, setCustoPorLata] = useState(inicial ? String(inicial.custoPorLata) : "");
-  const totalGasto = Math.round((Number(latas) || 0) * (Number(custoPorLata) || 0) * 100) / 100;
+  const [quantidade, setQuantidade] = useState(inicial ? String(inicial.quantidade) : "");
+  const [quem, setQuem] = useState(inicial?.quemTirou ?? "");
   const totalDias = diasDoMes(quando.ano, quando.mes);
   const dia = Math.min(quando.dia, totalDias);
   const data = `${quando.ano}-${String(quando.mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
+  const listaId = `quem-casa-${inicial?.id ?? "novo"}`;
 
   function mudar(parcial: Partial<typeof quando>) {
     setQuando((atual) => {
@@ -51,11 +52,11 @@ export function FormProducao({
   async function enviar(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form = e.currentTarget;
-    await salvarProducao(new FormData(form));
-    setLatas("");
-    setCustoPorLata("");
-    const valor = form.elements.namedItem("valorLata");
-    if (valor instanceof HTMLInputElement) valor.value = "";
+    await salvarCasa(new FormData(form));
+    if (!inicial) {
+      setQuantidade("");
+      setQuem("");
+    }
   }
 
   return (
@@ -99,32 +100,32 @@ export function FormProducao({
         <input
           type="number"
           step="0.01"
-          min={0}
-          name="quantidadeLatas"
-          value={latas}
+          min={0.01}
+          name="quantidade"
+          value={quantidade}
           required
-          onChange={(e) => setLatas(e.target.value)}
+          onChange={(e) => setQuantidade(e.target.value)}
           style={inputCampo}
         />
       </label>
       <label style={campo}>
-        Valor da lata
-        <input type="number" step="0.01" min={0} name="valorLata" defaultValue={inicial?.valorLata} required style={inputCampo} />
-      </label>
-      <label style={campo}>
-        Custo por lata
+        Quem tirou
         <input
-          type="number"
-          step="0.01"
-          min={0}
-          name="custoPorLata"
-          value={custoPorLata}
+          name="quemTirou"
+          list={listaId}
+          value={quem}
           required
-          onChange={(e) => setCustoPorLata(e.target.value)}
+          maxLength={80}
+          placeholder="Nome de quem levou para casa"
+          onChange={(e) => setQuem(e.target.value)}
           style={inputCampo}
         />
+        <datalist id={listaId}>
+          {(nomes ?? []).map((nome) => (
+            <option key={nome} value={nome} />
+          ))}
+        </datalist>
       </label>
-      <p style={{ margin: 0, color: "#5c4a32" }}>Total gasto: {brl(totalGasto)}</p>
       <button type="submit" style={botaoAdicionar}>
         {inicial ? "Salvar" : "Adicionar"}
       </button>
