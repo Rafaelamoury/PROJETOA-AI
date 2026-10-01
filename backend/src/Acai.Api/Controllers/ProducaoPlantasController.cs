@@ -24,9 +24,6 @@ public class ProducoesController(AppDbContext db) : ControllerBase
     public async Task<ActionResult<ProducaoResposta>> Create(SalvarProducao body, CancellationToken ct)
     {
         if (body.Data.Year is < 2000 or > 2100) return BadRequest(new { erro = "Data invalida." });
-        var exists = await db.ProducoesMensais.AnyAsync(
-            p => p.Ano == body.Data.Year && p.Mes == body.Data.Month && p.Dia == body.Data.Day, ct);
-        if (exists) return Conflict(new { erro = "Ja existe producao nesta data. Exclua e lance de novo se errou." });
 
         var e = new ProducaoMensal
         {
@@ -53,10 +50,6 @@ public class ProducoesController(AppDbContext db) : ControllerBase
 
         var e = await db.ProducoesMensais.FirstOrDefaultAsync(p => p.Id == id, ct);
         if (e is null) return NotFound();
-
-        var exists = await db.ProducoesMensais.AnyAsync(
-            p => p.Id != id && p.Ano == body.Data.Year && p.Mes == body.Data.Month && p.Dia == body.Data.Day, ct);
-        if (exists) return Conflict(new { erro = "Ja existe producao nesta data." });
 
         e.Ano = body.Data.Year;
         e.Mes = body.Data.Month;

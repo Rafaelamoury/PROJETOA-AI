@@ -42,8 +42,8 @@ export default function ComoUsarPage() {
       <Bloco n="7" titulo="Produção">
         Escolha o ano e o mês no filtro: a lista mostra só aquele mês, e os doze meses ficam disponíveis para trocar.
         Informe o dia em que o açaí foi tirado, a quantidade de latas, o valor da lata e o custo de cada lata. O total
-        gasto é a quantidade vezes esse custo. O caixa recebe o valor e o custo nessa data. Pode lançar vários dias no
-        mesmo mês. Errou algum dado? Use alterar na linha: o caixa acompanha. Excluir apaga o lançamento daquele dia.
+        gasto é a quantidade vezes esse custo. O caixa recebe o valor e o custo nessa data. Pode lançar quantas
+        produções quiser no mesmo dia. Errou algum dado? Use alterar na linha: o caixa acompanha. Excluir apaga só aquela linha.
         <strong> Casa</strong> é o açaí tirado para beber em casa: quantidade, dia, mês e quem tirou. Esse lançamento
         não entra no caixa.
       </Bloco>

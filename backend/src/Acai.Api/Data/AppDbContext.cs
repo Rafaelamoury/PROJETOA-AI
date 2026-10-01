@@ -35,9 +35,6 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(l => l.ProducaoMensalId)
             .OnDelete(DeleteBehavior.Cascade);
-        modelBuilder.Entity<ProducaoMensal>()
-            .HasIndex(x => new { x.Ano, x.Mes, x.Dia })
-            .IsUnique();
         modelBuilder.Entity<Usuario>().HasIndex(x => x.Cpf).IsUnique();
         modelBuilder.Entity<AtividadePlanejamento>().ToTable("AtividadesPlanejamento");
     }

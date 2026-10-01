@@ -54,7 +54,7 @@ export default async function ProducaoPage({
           <p>
             Escolha o ano e o mês para ver os lançamentos daquele período. Os doze meses ficam no filtro. Informe o
             custo de cada lata: o total gasto e a quantidade vezes esse valor e sai do caixa no mesmo dia, junto com a
-            entrada das latas. Pode lançar vários dias no mesmo mês. Use alterar para corrigir uma linha já lançada.
+            entrada das latas. Pode lançar quantas produções quiser no mesmo dia. Use alterar para corrigir uma linha já lançada.
           </p>
         </div>
         <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
