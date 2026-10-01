@@ -1,4 +1,5 @@
 ﻿import { PainelOperacao } from "@/components/PainelOperacao";
+import { fraseDoDia } from "@/lib/frase-do-dia";
 import { apiGet } from "@/lib/server-api";
 import type { Painel } from "@/lib/types";
 
@@ -18,5 +19,5 @@ export default async function PainelPage({
     return <p>Suba a API com: dotnet run --launch-profile http --project backend/src/Acai.Api</p>;
   }
 
-  return <PainelOperacao data={data} />;
+  return <PainelOperacao data={data} frase={fraseDoDia()} />;
 }

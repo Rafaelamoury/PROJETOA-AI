@@ -1,7 +1,8 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
+import { useEffect, useRef } from "react";
 import { sair } from "@/app/actions";
 import type { Sessao } from "@/lib/server-api";
 
@@ -19,6 +20,18 @@ const links = [
 
 export function Shell({ children, user }: { children: React.ReactNode; user: Sessao | null }) {
   const path = usePathname();
+  const router = useRouter();
+  const decidiuAbertura = useRef(false);
+
+  useEffect(() => {
+    if (decidiuAbertura.current) return;
+    decidiuAbertura.current = true;
+    if (path === "/login" || path === "/") return;
+    const abertura = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
+    if (abertura?.type === "reload") return;
+    router.replace("/");
+  }, [path, router]);
+
   if (path === "/login") return <>{children}</>;
 
   const nav = user?.isAdmin ? [...links, { href: "/usuarios", label: "Usuarios" }] : links;
@@ -34,8 +47,10 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
           flexDirection: "column",
         }}
       >
-        <p style={{ letterSpacing: "0.18em", fontSize: 11, opacity: 0.8, margin: 0 }}>RR</p>
-        <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, margin: "4px 0 28px" }}>Açaí</h1>
+        <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
+          <p style={{ letterSpacing: "0.18em", fontSize: 11, opacity: 0.8, margin: 0 }}>RR</p>
+          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, margin: "4px 0 28px" }}>Açaí</h1>
+        </Link>
         <nav style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
           {nav.map((l) => {
             const active = l.href === "/" ? path === "/" : path === l.href || path.startsWith(`${l.href}/`);

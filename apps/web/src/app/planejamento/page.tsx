@@ -21,18 +21,18 @@ const vistas = [
 function blocos(vista: string) {
   if (vista === "semestral") {
     return [
-      { periodo: 1, titulo: "1o semestre", sub: "Janeiro a junho" },
-      { periodo: 2, titulo: "2o semestre", sub: "Julho a dezembro" },
+      { periodo: 1, titulo: "1º semestre", sub: "Janeiro a junho" },
+      { periodo: 2, titulo: "2º semestre", sub: "Julho a dezembro" },
     ];
   }
   if (vista === "anual") {
     return [{ periodo: 1, titulo: "Ano inteiro", sub: "Atividades do ciclo anual" }];
   }
   return [
-    { periodo: 1, titulo: "1o trimestre", sub: "Janeiro a marco" },
-    { periodo: 2, titulo: "2o trimestre", sub: "Abril a junho" },
-    { periodo: 3, titulo: "3o trimestre", sub: "Julho a setembro" },
-    { periodo: 4, titulo: "4o trimestre", sub: "Outubro a dezembro" },
+    { periodo: 1, titulo: "1º trimestre", sub: "Janeiro a março" },
+    { periodo: 2, titulo: "2º trimestre", sub: "Abril a junho" },
+    { periodo: 3, titulo: "3º trimestre", sub: "Julho a setembro" },
+    { periodo: 4, titulo: "4º trimestre", sub: "Outubro a dezembro" },
   ];
 }
 
