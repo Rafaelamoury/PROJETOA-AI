@@ -5,12 +5,25 @@
   saldo: number;
 };
 
+export type PrevisaoPlantio = {
+  meses: number;
+  periodo: string;
+  cachos: number;
+  latas: number;
+  valorMedioLata: number | null;
+  faturamento: number | null;
+  valorDaMediaGeral: boolean;
+};
+
 export type Plantas = {
   quantidadePequeno: number;
   quantidadeMedio: number;
   quantidadeGrande: number;
   total: number;
   quantidadeJaProduzem: number;
+  cachosPorLata: number;
+  mesesParaMadurar: number;
+  previsoes: PrevisaoPlantio[];
 };
 
 export type Producao = {

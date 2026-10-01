@@ -195,6 +195,8 @@ export async function salvarPlantas(formData: FormData) {
     quantidadeMedio: Number(formData.get("quantidadeMedio")),
     quantidadeGrande: Number(formData.get("quantidadeGrande")),
     quantidadeJaProduzem: Number(formData.get("quantidadeJaProduzem")),
+    cachosPorLata: Number(formData.get("cachosPorLata") || 0),
+    mesesParaMadurar: Number(formData.get("mesesParaMadurar") || 0),
   });
   revalidatePath("/plantas");
   revalidatePath("/");

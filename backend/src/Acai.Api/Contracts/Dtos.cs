@@ -52,8 +52,30 @@ public record ProducaoResposta(
 public record SalvarProducao(DateOnly Data, decimal QuantidadeLatas, decimal ValorLata, decimal CustosExtracao);
 public record CasaResposta(int Id, int Ano, int Mes, int Dia, decimal Quantidade, string QuemTirou);
 public record SalvarCasa(DateOnly Data, decimal Quantidade, string QuemTirou);
-public record PlantasResposta(int QuantidadePequeno, int QuantidadeMedio, int QuantidadeGrande, int Total, int QuantidadeJaProduzem);
-public record SalvarPlantas(int QuantidadePequeno, int QuantidadeMedio, int QuantidadeGrande, int QuantidadeJaProduzem);
+public record PrevisaoPlantio(
+    int Meses,
+    string Periodo,
+    decimal Cachos,
+    decimal Latas,
+    decimal? ValorMedioLata,
+    decimal? Faturamento,
+    bool ValorDaMediaGeral);
+public record PlantasResposta(
+    int QuantidadePequeno,
+    int QuantidadeMedio,
+    int QuantidadeGrande,
+    int Total,
+    int QuantidadeJaProduzem,
+    int CachosPorLata,
+    int MesesParaMadurar,
+    IReadOnlyList<PrevisaoPlantio> Previsoes);
+public record SalvarPlantas(
+    int QuantidadePequeno,
+    int QuantidadeMedio,
+    int QuantidadeGrande,
+    int QuantidadeJaProduzem,
+    int CachosPorLata,
+    int MesesParaMadurar);
 public record MesOperacaoResposta(
     int Mes,
     string Nome,

@@ -8,6 +8,8 @@ public static class SchemaPatch
     {
         await db.Database.EnsureCreatedAsync();
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN QuantidadeJaProduzem INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN CachosPorLata INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN MesesParaMadurar INTEGER NOT NULL DEFAULT 0");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ProducaoMensalId INTEGER NULL");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN DiasAtividade INTEGER NULL");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN PessoasDetalhe TEXT NULL");

@@ -75,6 +75,8 @@ public class EstoquePlantas
     public int QuantidadeMedio { get; set; }
     public int QuantidadeGrande { get; set; }
     public int QuantidadeJaProduzem { get; set; }
+    public int CachosPorLata { get; set; }
+    public int MesesParaMadurar { get; set; }
 }
 
 public class Usuario

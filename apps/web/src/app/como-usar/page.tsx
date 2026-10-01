@@ -55,7 +55,9 @@ export default function ComoUsarPage() {
       </Bloco>
 
       <Bloco n="8" titulo="Plantas">
-        Quantos pés pequeno, médio e grande, e quantos já produzem. Não é fruta colhida — é o campo.
+        Informe os pés pequeno, médio e grande, e os que já produzem. Cada pé que já produz bota 1 cacho por mês.
+        Diga quantos cachos formam uma lata e quantos meses o cacho leva para ficar maduro. A aba mostra a média de
+        latas e o faturamento do trimestre, semestre, nove meses e ano, usando o valor da lata já lançado em Produção.
       </Bloco>
 
       <Bloco n="9" titulo="Planejamento">
