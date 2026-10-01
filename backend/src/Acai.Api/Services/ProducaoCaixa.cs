@@ -17,23 +17,49 @@ public static class ProducaoCaixa
     {
         var data = DataDaProducao(p);
         var quando = data.ToString("dd/MM/yyyy");
-        db.Lancamentos.Add(new Lancamento
-        {
-            Data = data,
-            Tipo = TipoLancamento.EntradaCaixa,
-            Descricao = $"Producao {quando} - acai tirado (latas x valor lancado)",
-            Valor = p.ValorBruto,
-            ProducaoMensalId = p.Id
-        });
-        db.Lancamentos.Add(new Lancamento
-        {
-            Data = data,
-            Tipo = TipoLancamento.CustoOperacional,
-            Descricao = $"Producao {quando} - custo para tirar acai",
-            Valor = p.CustosExtracao,
-            ProducaoMensalId = p.Id
-        });
+        db.Lancamentos.Add(Novo(p, data, quando, TipoLancamento.EntradaCaixa, p.ValorBruto, "acai tirado (latas x valor lancado)"));
+        db.Lancamentos.Add(Novo(p, data, quando, TipoLancamento.CustoOperacional, p.CustosExtracao, "custo para tirar acai"));
     }
+
+    public static void AtualizarLancamentos(AppDbContext db, ProducaoMensal p, IReadOnlyList<Lancamento> atuais)
+    {
+        var data = DataDaProducao(p);
+        var quando = data.ToString("dd/MM/yyyy");
+        AtualizarOuCriar(db, p, atuais, data, quando, TipoLancamento.EntradaCaixa, p.ValorBruto, "acai tirado (latas x valor lancado)");
+        AtualizarOuCriar(db, p, atuais, data, quando, TipoLancamento.CustoOperacional, p.CustosExtracao, "custo para tirar acai");
+    }
+
+    private static void AtualizarOuCriar(
+        AppDbContext db,
+        ProducaoMensal p,
+        IReadOnlyList<Lancamento> atuais,
+        DateOnly data,
+        string quando,
+        TipoLancamento tipo,
+        decimal valor,
+        string detalhe)
+    {
+        var existente = atuais.FirstOrDefault(l => l.Tipo == tipo);
+        if (existente is null)
+        {
+            db.Lancamentos.Add(Novo(p, data, quando, tipo, valor, detalhe));
+            return;
+        }
+
+        existente.Data = data;
+        existente.Valor = valor;
+        existente.Descricao = $"Producao {quando} - {detalhe}";
+    }
+
+    private static Lancamento Novo(ProducaoMensal p, DateOnly data, string quando, TipoLancamento tipo, decimal valor, string detalhe) =>
+        new()
+        {
+            Data = data,
+            Tipo = tipo,
+            Descricao = $"Producao {quando} - {detalhe}",
+            Valor = valor,
+            ProducaoMensalId = p.Id
+        };
 
     public static async Task BackfillAsync(AppDbContext db, CancellationToken ct = default)
     {

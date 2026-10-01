@@ -134,12 +134,15 @@ export async function excluirProduto(formData: FormData) {
 }
 
 export async function salvarProducao(formData: FormData) {
-  await post("/producoes", "POST", {
+  const id = String(formData.get("id") || "");
+  const body = {
     data: String(formData.get("data")),
     quantidadeLatas: Number(formData.get("quantidadeLatas")),
     valorLata: Number(formData.get("valorLata")),
     custosExtracao: Number(formData.get("custosExtracao")),
-  });
+  };
+  if (id) await post(`/producoes/${id}`, "PUT", body);
+  else await post("/producoes", "POST", body);
   revalidatePath("/producao");
   revalidatePath("/caixa");
   revalidatePath("/custos");

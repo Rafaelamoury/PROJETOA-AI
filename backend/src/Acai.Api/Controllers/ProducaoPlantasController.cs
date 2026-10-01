@@ -45,8 +45,31 @@ public class ProducoesController(AppDbContext db) : ControllerBase
     }
 
     [HttpPut("{id:int}")]
-    public IActionResult Update() =>
-        BadRequest(new { erro = "Producao ja lancada nao se altera. Exclua o mes e lance de novo para nao reescrever o caixa antigo." });
+    public async Task<ActionResult<ProducaoResposta>> Update(int id, SalvarProducao body, CancellationToken ct)
+    {
+        if (body.Data.Year is < 2000 or > 2100) return BadRequest(new { erro = "Data invalida." });
+        if (body.QuantidadeLatas < 0 || body.ValorLata < 0 || body.CustosExtracao < 0)
+            return BadRequest(new { erro = "Valores nao podem ser negativos." });
+
+        var e = await db.ProducoesMensais.FirstOrDefaultAsync(p => p.Id == id, ct);
+        if (e is null) return NotFound();
+
+        var exists = await db.ProducoesMensais.AnyAsync(
+            p => p.Id != id && p.Ano == body.Data.Year && p.Mes == body.Data.Month && p.Dia == body.Data.Day, ct);
+        if (exists) return Conflict(new { erro = "Ja existe producao nesta data." });
+
+        e.Ano = body.Data.Year;
+        e.Mes = body.Data.Month;
+        e.Dia = body.Data.Day;
+        e.QuantidadeLatas = body.QuantidadeLatas;
+        e.ValorLata = body.ValorLata;
+        e.CustosExtracao = body.CustosExtracao;
+
+        var lancamentos = await db.Lancamentos.Where(l => l.ProducaoMensalId == e.Id).ToListAsync(ct);
+        ProducaoCaixa.AtualizarLancamentos(db, e, lancamentos);
+        await db.SaveChangesAsync(ct);
+        return Map(e);
+    }
 
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> Delete(int id, CancellationToken ct)

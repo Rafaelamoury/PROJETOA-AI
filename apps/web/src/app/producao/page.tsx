@@ -14,7 +14,7 @@ export default async function ProducaoPage() {
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Producao mensal</h2>
           <p>
             Escolha o mes e o dia em que o acai foi tirado. O valor das latas entra no caixa nessa data e o custo para
-            tirar sai no mesmo dia. Pode lancar varios dias no mesmo mes.
+            tirar sai no mesmo dia. Pode lancar varios dias no mesmo mes. Use alterar para corrigir uma linha ja lancada.
           </p>
         </div>
         <LancarModal
@@ -51,12 +51,27 @@ export default async function ProducaoPage() {
                 <strong>{brl(p.valorLiquido ?? p.valorProducao)}</strong>
               </td>
               <td>
-                <form action={excluirProducao}>
-                  <input type="hidden" name="id" value={p.id} />
-                  <button type="submit" style={{ color: "#8a1c1c" }}>
-                    excluir
-                  </button>
-                </form>
+                <div style={{ display: "flex", gap: 8, alignItems: "center" }}>
+                  <LancarModal titulo="Alterar producao" botao="alterar" compact dica="O caixa e os custos desta data sao atualizados juntos.">
+                    <FormProducao
+                      inicial={{
+                        id: p.id,
+                        ano: p.ano,
+                        mes: p.mes,
+                        dia: p.dia || 1,
+                        quantidadeLatas: p.quantidadeLatas,
+                        valorLata: p.valorLata,
+                        custosExtracao: p.custosExtracao,
+                      }}
+                    />
+                  </LancarModal>
+                  <form action={excluirProducao}>
+                    <input type="hidden" name="id" value={p.id} />
+                    <button type="submit" style={{ color: "#8a1c1c" }}>
+                      excluir
+                    </button>
+                  </form>
+                </div>
               </td>
             </tr>
           ))}

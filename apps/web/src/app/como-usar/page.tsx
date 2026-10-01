@@ -41,7 +41,8 @@ export default function ComoUsarPage() {
 
       <Bloco n="7" titulo="Produção">
         Informe o dia em que o açaí foi tirado, a quantidade de latas, o valor da lata e o custo total. O caixa recebe o
-        valor e o custo nessa data. Pode lançar vários dias no mesmo mês. Errou o dia? Exclua e lance de novo.
+        valor e o custo nessa data. Pode lançar vários dias no mesmo mês. Errou algum dado? Use alterar na linha: o caixa
+        acompanha. Excluir apaga o lançamento daquele dia.
       </Bloco>
 
       <Bloco n="8" titulo="Plantas">

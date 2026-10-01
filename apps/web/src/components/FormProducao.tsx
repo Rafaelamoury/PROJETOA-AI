@@ -14,8 +14,22 @@ function diasDoMes(ano: number, mes: number) {
   return new Date(ano, mes, 0).getDate();
 }
 
-export function FormProducao() {
-  const [quando, setQuando] = useState(inicio);
+export function FormProducao({
+  inicial,
+}: {
+  inicial?: {
+    id: number;
+    ano: number;
+    mes: number;
+    dia: number;
+    quantidadeLatas: number;
+    valorLata: number;
+    custosExtracao: number;
+  };
+}) {
+  const [quando, setQuando] = useState(() =>
+    inicial ? { ano: inicial.ano, mes: inicial.mes, dia: inicial.dia } : inicio(),
+  );
   const totalDias = diasDoMes(quando.ano, quando.mes);
   const dia = Math.min(quando.dia, totalDias);
   const data = `${quando.ano}-${String(quando.mes).padStart(2, "0")}-${String(dia).padStart(2, "0")}`;
@@ -32,6 +46,7 @@ export function FormProducao() {
   return (
     <form action={salvarProducao} style={{ display: "grid", gap: 12 }}>
       <input type="hidden" name="data" value={data} />
+      {inicial ? <input type="hidden" name="id" value={inicial.id} /> : null}
       <label style={campo}>
         Ano
         <input
@@ -66,18 +81,18 @@ export function FormProducao() {
       </label>
       <label style={campo}>
         Quantidade de latas
-        <input type="number" step="0.01" name="quantidadeLatas" required style={inputCampo} />
+        <input type="number" step="0.01" name="quantidadeLatas" defaultValue={inicial?.quantidadeLatas} required style={inputCampo} />
       </label>
       <label style={campo}>
         Valor da lata
-        <input type="number" step="0.01" name="valorLata" required style={inputCampo} />
+        <input type="number" step="0.01" name="valorLata" defaultValue={inicial?.valorLata} required style={inputCampo} />
       </label>
       <label style={campo}>
         Custo total para tirar o acai
-        <input type="number" step="0.01" name="custosExtracao" required style={inputCampo} />
+        <input type="number" step="0.01" name="custosExtracao" defaultValue={inicial?.custosExtracao} required style={inputCampo} />
       </label>
       <button type="submit" style={botaoAdicionar}>
-        Adicionar
+        {inicial ? "Salvar" : "Adicionar"}
       </button>
     </form>
   );
