@@ -31,12 +31,14 @@ export default function ComoUsarPage() {
       </Bloco>
 
       <Bloco n="5" titulo="Custos">
-        Combustível, adubo, diária. Escolha custo operacional ou mão de obra (aí aparece o serviço cadastrado). O valor
-        sai do caixa na hora.
+        Combustível, adubo e outros gastos operacionais saem do caixa na hora. Mão de obra pede quem fez, quantos dias
+        a atividade levou, quantas pessoas trabalharam e o valor de cada pessoa por dia. O total é a soma desses
+        valores vezes os dias.
       </Bloco>
 
       <Bloco n="6" titulo="Mão de obra e Produtos">
-        Incluir, alterar ou excluir o cadastro. Alterar o preço <strong>não muda</strong> o que já foi lançado antes.
+        Aqui só se cadastra o serviço e o valor. O lançamento, com quem fez, os dias e as pessoas, fica em{" "}
+        <strong>Custos</strong>. Alterar o preço do cadastro <strong>não muda</strong> o que já foi lançado antes.
       </Bloco>
 
       <Bloco n="7" titulo="Produção">

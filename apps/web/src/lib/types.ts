@@ -60,6 +60,8 @@ export type Painel = {
   meses: MesOperacao[];
 };
 
+export type PessoaMaoObra = { nome: string; valor: number };
+
 export type Lancamento = {
   id: number;
   data: string;
@@ -69,6 +71,8 @@ export type Lancamento = {
   servicoMaoObraId: number | null;
   servicoNome: string | null;
   producaoMensalId: number | null;
+  diasAtividade: number | null;
+  pessoas: PessoaMaoObra[] | null;
 };
 
 export type Servico = { id: number; nome: string; valor: number };

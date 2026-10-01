@@ -9,6 +9,8 @@ public static class SchemaPatch
         await db.Database.EnsureCreatedAsync();
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN QuantidadeJaProduzem INTEGER NOT NULL DEFAULT 0");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ProducaoMensalId INTEGER NULL");
+        await TryAlter("ALTER TABLE Lancamentos ADD COLUMN DiasAtividade INTEGER NULL");
+        await TryAlter("ALTER TABLE Lancamentos ADD COLUMN PessoasDetalhe TEXT NULL");
         await TryAlter("ALTER TABLE ProducoesMensais ADD COLUMN Dia INTEGER NOT NULL DEFAULT 1");
         await TryAlter("DROP INDEX IF EXISTS \"IX_ProducoesMensais_Ano_Mes\"");
         await TryAlter("DROP INDEX IF EXISTS \"IX_ProducoesMensais_Ano_Mes_Dia\"");

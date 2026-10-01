@@ -88,15 +88,20 @@ export async function atualizarSaldo(formData: FormData) {
 export async function criarLancamento(formData: FormData) {
   const tipo = String(formData.get("tipo"));
   const servico = String(formData.get("servicoMaoObraId") || "");
+  const pessoasBruto = String(formData.get("pessoas") || "");
+  const dias = String(formData.get("diasAtividade") || "");
   await post("/lancamentos", "POST", {
     data: String(formData.get("data")),
     tipo,
-    descricao: String(formData.get("descricao")),
+    descricao: String(formData.get("descricao") || ""),
     valor: Number(formData.get("valor")),
     servicoMaoObraId: servico ? Number(servico) : null,
+    diasAtividade: dias ? Number(dias) : null,
+    pessoas: pessoasBruto ? JSON.parse(pessoasBruto) : null,
   });
   revalidatePath("/caixa");
   revalidatePath("/custos");
+  revalidatePath("/mao-obra");
   revalidatePath("/");
 }
 
@@ -104,6 +109,7 @@ export async function excluirLancamento(formData: FormData) {
   await post(`/lancamentos/${formData.get("id")}`, "DELETE");
   revalidatePath("/caixa");
   revalidatePath("/custos");
+  revalidatePath("/mao-obra");
   revalidatePath("/");
 }
 

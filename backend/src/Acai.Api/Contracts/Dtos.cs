@@ -4,8 +4,26 @@ namespace Acai.Api.Contracts;
 
 public record CaixaResposta(decimal SaldoInicial, decimal Entradas, decimal Saidas, decimal Saldo);
 public record AtualizarSaldoInicial(decimal SaldoInicial);
-public record LancamentoResposta(int Id, DateOnly Data, TipoLancamento Tipo, string Descricao, decimal Valor, int? ServicoMaoObraId, string? ServicoNome, int? ProducaoMensalId);
-public record CriarLancamento(DateOnly Data, TipoLancamento Tipo, string Descricao, decimal Valor, int? ServicoMaoObraId);
+public record PessoaMaoObraItem(string Nome, decimal Valor);
+public record LancamentoResposta(
+    int Id,
+    DateOnly Data,
+    TipoLancamento Tipo,
+    string Descricao,
+    decimal Valor,
+    int? ServicoMaoObraId,
+    string? ServicoNome,
+    int? ProducaoMensalId,
+    int? DiasAtividade,
+    IReadOnlyList<PessoaMaoObraItem>? Pessoas);
+public record CriarLancamento(
+    DateOnly Data,
+    TipoLancamento Tipo,
+    string Descricao,
+    decimal Valor,
+    int? ServicoMaoObraId,
+    int? DiasAtividade = null,
+    List<PessoaMaoObraItem>? Pessoas = null);
 public record ServicoResposta(int Id, string Nome, decimal Valor);
 public record SalvarServico(string Nome, decimal Valor);
 public record ProdutoResposta(int Id, string Nome, decimal Valor);

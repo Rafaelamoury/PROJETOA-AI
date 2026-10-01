@@ -31,6 +31,8 @@ public class Lancamento
     public ServicoMaoObra? ServicoMaoObra { get; set; }
     public int? ProducaoMensalId { get; set; }
     public ProducaoMensal? ProducaoMensal { get; set; }
+    public int? DiasAtividade { get; set; }
+    public string? PessoasDetalhe { get; set; }
 }
 
 public class ProducaoMensal

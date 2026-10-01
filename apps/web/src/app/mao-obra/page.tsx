@@ -10,7 +10,7 @@ export default async function MaoObraPage() {
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Servicos de mao de obra</h2>
-          <p>Incluir, alterar e excluir. O preco novo vale so para o proximo lancamento no caixa.</p>
+          <p>Incluir, alterar e excluir o serviço e o valor. O lançamento desse custo é feito em Custos.</p>
         </div>
         <LancarModal titulo="Novo servico" botao="+ Incluir servico" dica="Depois de adicionar, a aba continua aberta.">
           <form action={salvarServico} style={{ display: "grid", gap: 12 }}>
