@@ -13,19 +13,28 @@ export function FormLancamentoCusto({ servicos, produtos }: { servicos: Servico[
   const [servicoId, setServicoId] = useState("");
   const [produtoId, setProdutoId] = useState("");
   const [quantidade, setQuantidade] = useState("");
+  const [valorUnitario, setValorUnitario] = useState("");
   const [dias, setDias] = useState("1");
   const [pessoas, setPessoas] = useState<Pessoa[]>([{ nome: "", valor: "" }]);
   const mao = tipo === "MaoObra";
   const produto = produtos.find((p) => String(p.id) === produtoId);
   const unidade = produto ? unidadeDe(produto.unidade) : null;
   const qtdNum = Math.max(0, Number(quantidade) || 0);
-  const totalProduto = produto ? Math.round(qtdNum * produto.valor * 100) / 100 : 0;
+  const precoNum = Math.max(0, Number(valorUnitario) || 0);
+  const totalProduto = produto ? Math.round(qtdNum * precoNum * 100) / 100 : 0;
   const diasNum = Math.max(0, Number(dias) || 0);
   const somaDia = pessoas.reduce((s, p) => s + (Number(p.valor) || 0), 0);
   const total = Math.round(somaDia * (diasNum || 0) * 100) / 100;
 
   function valorDoServico(id: string) {
     return servicos.find((s) => String(s.id) === id)?.valor;
+  }
+
+  function escolherProduto(id: string) {
+    setProdutoId(id);
+    const escolhido = produtos.find((p) => String(p.id) === id);
+    setValorUnitario(escolhido ? String(escolhido.valor) : "");
+    setQuantidade("");
   }
 
   function escolherServico(id: string) {
@@ -58,11 +67,13 @@ export function FormLancamentoCusto({ servicos, produtos }: { servicos: Servico[
       dados.set("valor", String(total));
       dados.delete("produtoId");
       dados.delete("quantidade");
+      dados.delete("valorUnitario");
       const descricao = String(dados.get("descricao") || "").trim();
       if (!descricao) dados.set("descricao", pessoas.map((p) => p.nome.trim()).filter(Boolean).join(", "));
     } else if (produto) {
       dados.set("produtoId", String(produto.id));
       dados.set("quantidade", String(qtdNum));
+      dados.set("valorUnitario", String(precoNum));
       dados.set("valor", String(totalProduto));
       const descricao = String(dados.get("descricao") || "").trim();
       if (!descricao) dados.set("descricao", `${produto.nome}: ${qtdNum} ${unidade?.curto ?? ""}`.trim());
@@ -177,7 +188,7 @@ export function FormLancamentoCusto({ servicos, produtos }: { servicos: Servico[
         <>
           <label style={campo}>
             Produto cadastrado
-            <select value={produtoId} onChange={(e) => setProdutoId(e.target.value)} style={inputCampo}>
+            <select value={produtoId} onChange={(e) => escolherProduto(e.target.value)} style={inputCampo}>
               <option value="">Nenhum — gasto avulso</option>
               {produtos.map((p) => {
                 const u = unidadeDe(p.unidade);
@@ -192,6 +203,18 @@ export function FormLancamentoCusto({ servicos, produtos }: { servicos: Servico[
           {produto && unidade ? (
             <>
               <label style={campo}>
+                Valor desta compra ({unidade.por})
+                <input
+                  type="number"
+                  step="0.01"
+                  min={0}
+                  value={valorUnitario}
+                  required
+                  onChange={(e) => setValorUnitario(e.target.value)}
+                  style={inputCampo}
+                />
+              </label>
+              <label style={campo}>
                 Quantidade ({unidade.nome.toLowerCase()})
                 <input
                   type="number"
@@ -204,7 +227,7 @@ export function FormLancamentoCusto({ servicos, produtos }: { servicos: Servico[
                 />
               </label>
               <p style={{ margin: 0, color: "#5c4a32" }}>
-                {brl(produto.valor)} {unidade.por}
+                O cadastro sugere {brl(produto.valor)} {unidade.por}. Nesta compra: {brl(precoNum)}
                 {qtdNum > 0 ? ` × ${qtdNum.toLocaleString("pt-BR")} ${unidade.curto}` : ""}. Total que sai do caixa:{" "}
                 <strong>{brl(totalProduto)}</strong>
               </p>

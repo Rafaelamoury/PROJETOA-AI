@@ -32,15 +32,17 @@ export default function ComoUsarPage() {
 
       <Bloco n="5" titulo="Custos">
         Combustível e outros gastos avulsos saem do caixa pelo valor informado. Compra de material usa o produto
-        cadastrado: informe a quantidade e o total é a quantidade vezes o valor do metro, litro, quilo ou unidade. Mão
+        cadastrado: informe a quantidade e, se o preço mudou, o valor do metro, litro, quilo ou unidade desta compra. O
+        total é a quantidade vezes esse valor. Mão
         de obra pede quem fez, quantos dias a atividade levou, quantas pessoas trabalharam e o valor de cada pessoa por
         dia.
       </Bloco>
 
       <Bloco n="6" titulo="Mão de obra e Produtos">
         Mão de obra cadastra o serviço e o valor. Produtos cadastra cano, mangueira, veneno, adubo e o que for por
-        unidade, com o preço do metro, litro, quilo ou unidade. A compra é lançada em <strong>Custos</strong>. Alterar
-        o preço do cadastro <strong>não muda</strong> o que já foi lançado antes.
+        unidade, com um preço sugerido do metro, litro, quilo ou unidade. A compra é lançada em <strong>Custos</strong>,
+        e o valor da unidade pode ser ajustado naquela compra. Alterar o preço do cadastro <strong>não muda</strong> o
+        que já foi lançado antes.
       </Bloco>
 
       <Bloco n="7" titulo="Produção">

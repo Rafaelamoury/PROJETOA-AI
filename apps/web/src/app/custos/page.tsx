@@ -19,8 +19,8 @@ export default async function CustosPage() {
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Custos</h2>
           <p>
-            Lance gastos avulsos, compra de material e mão de obra. No produto cadastrado, a quantidade vezes o valor
-            do metro, litro, quilo ou unidade vira o total que sai do caixa.
+            Lance gastos avulsos, compra de material e mão de obra. No produto cadastrado, informe a quantidade e o
+            valor desta compra. O total que sai do caixa é a quantidade vezes esse valor.
           </p>
         </div>
         <LancarModal

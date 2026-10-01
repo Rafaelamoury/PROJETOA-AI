@@ -143,14 +143,16 @@ public class LancamentosController(AppDbContext db) : ControllerBase
         if (body.Tipo != TipoLancamento.CustoOperacional)
             return "A compra de produto entra como custo operacional.";
         if (body.Quantidade is null or <= 0) return "Informe a quantidade comprada.";
+        var unitario = body.ValorUnitario ?? produto.Valor;
+        if (unitario < 0) return "O valor da unidade nao pode ser negativo.";
 
         var quantidade = body.Quantidade.Value;
         entity.ProdutoId = produto.Id;
         entity.ProdutoNome = produto.Nome;
         entity.Quantidade = quantidade;
         entity.UnidadeCompra = produto.Unidade;
-        entity.ValorUnitario = produto.Valor;
-        entity.Valor = Math.Round(quantidade * produto.Valor, 2);
+        entity.ValorUnitario = unitario;
+        entity.Valor = Math.Round(quantidade * unitario, 2);
         entity.Descricao = string.IsNullOrWhiteSpace(body.Descricao)
             ? $"{produto.Nome}: {quantidade.ToString("0.##", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))} {NomeUnidade(produto.Unidade)}"
             : body.Descricao.Trim();

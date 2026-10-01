@@ -14,8 +14,9 @@ export default async function ProdutosPage() {
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Valor dos produtos</h2>
           <p>
-            Cadastre o material e o preço da unidade: metro, litro, quilo ou unidade. A compra, com a quantidade e o
-            total, é lançada em Custos. Alterar o preço daqui não reescreve o que já saiu do caixa.
+            Cadastre o material uma vez, com metro, litro, quilo ou unidade, e um preço sugerido. Cada compra é
+            lançada em Custos, e o valor da unidade pode mudar naquela compra. Alterar o preço daqui não reescreve o
+            que já saiu do caixa.
           </p>
         </div>
         <LancarModal titulo="Novo produto" botao="+ Incluir produto" dica="Depois de adicionar, a aba continua aberta.">

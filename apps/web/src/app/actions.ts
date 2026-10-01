@@ -100,6 +100,7 @@ export async function criarLancamento(formData: FormData) {
     pessoas: pessoasBruto ? JSON.parse(pessoasBruto) : null,
     produtoId: formData.get("produtoId") ? Number(formData.get("produtoId")) : null,
     quantidade: formData.get("quantidade") ? Number(formData.get("quantidade")) : null,
+    valorUnitario: formData.get("valorUnitario") ? Number(formData.get("valorUnitario")) : null,
   });
   revalidatePath("/caixa");
   revalidatePath("/custos");

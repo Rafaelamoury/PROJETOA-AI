@@ -30,7 +30,8 @@ public record CriarLancamento(
     int? DiasAtividade = null,
     List<PessoaMaoObraItem>? Pessoas = null,
     int? ProdutoId = null,
-    decimal? Quantidade = null);
+    decimal? Quantidade = null,
+    decimal? ValorUnitario = null);
 public record ServicoResposta(int Id, string Nome, decimal Valor);
 public record SalvarServico(string Nome, decimal Valor);
 public record ProdutoResposta(int Id, string Nome, decimal Valor, UnidadeProduto Unidade);
