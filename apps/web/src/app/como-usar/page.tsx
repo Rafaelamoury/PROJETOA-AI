@@ -31,14 +31,16 @@ export default function ComoUsarPage() {
       </Bloco>
 
       <Bloco n="5" titulo="Custos">
-        Combustível, adubo e outros gastos operacionais saem do caixa na hora. Mão de obra pede quem fez, quantos dias
-        a atividade levou, quantas pessoas trabalharam e o valor de cada pessoa por dia. O total é a soma desses
-        valores vezes os dias.
+        Combustível e outros gastos avulsos saem do caixa pelo valor informado. Compra de material usa o produto
+        cadastrado: informe a quantidade e o total é a quantidade vezes o valor do metro, litro, quilo ou unidade. Mão
+        de obra pede quem fez, quantos dias a atividade levou, quantas pessoas trabalharam e o valor de cada pessoa por
+        dia.
       </Bloco>
 
       <Bloco n="6" titulo="Mão de obra e Produtos">
-        Aqui só se cadastra o serviço e o valor. O lançamento, com quem fez, os dias e as pessoas, fica em{" "}
-        <strong>Custos</strong>. Alterar o preço do cadastro <strong>não muda</strong> o que já foi lançado antes.
+        Mão de obra cadastra o serviço e o valor. Produtos cadastra cano, mangueira, veneno, adubo e o que for por
+        unidade, com o preço do metro, litro, quilo ou unidade. A compra é lançada em <strong>Custos</strong>. Alterar
+        o preço do cadastro <strong>não muda</strong> o que já foi lançado antes.
       </Bloco>
 
       <Bloco n="7" titulo="Produção">

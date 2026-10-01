@@ -61,6 +61,17 @@ export function dataBr(ano: number, mes: number, dia: number) {
   return `${d}/${m}/${ano}`;
 }
 
+export const UNIDADES = [
+  { id: "Metro", nome: "Metro", curto: "m", por: "por metro" },
+  { id: "Litro", nome: "Litro", curto: "L", por: "por litro" },
+  { id: "Quilo", nome: "Quilo", curto: "kg", por: "por quilo" },
+  { id: "Unidade", nome: "Unidade", curto: "un", por: "por unidade" },
+] as const;
+
+export function unidadeDe(id: string | null | undefined) {
+  return UNIDADES.find((u) => u.id === id) ?? UNIDADES[3];
+}
+
 export function dataIsoBr(iso: string) {
   const [ano, mes, dia] = iso.slice(0, 10).split("-");
   if (!ano || !mes || !dia) return iso;

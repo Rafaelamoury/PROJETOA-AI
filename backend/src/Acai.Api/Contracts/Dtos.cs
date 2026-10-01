@@ -15,7 +15,12 @@ public record LancamentoResposta(
     string? ServicoNome,
     int? ProducaoMensalId,
     int? DiasAtividade,
-    IReadOnlyList<PessoaMaoObraItem>? Pessoas);
+    IReadOnlyList<PessoaMaoObraItem>? Pessoas,
+    int? ProdutoId,
+    string? ProdutoNome,
+    decimal? Quantidade,
+    UnidadeProduto? Unidade,
+    decimal? ValorUnitario);
 public record CriarLancamento(
     DateOnly Data,
     TipoLancamento Tipo,
@@ -23,11 +28,13 @@ public record CriarLancamento(
     decimal Valor,
     int? ServicoMaoObraId,
     int? DiasAtividade = null,
-    List<PessoaMaoObraItem>? Pessoas = null);
+    List<PessoaMaoObraItem>? Pessoas = null,
+    int? ProdutoId = null,
+    decimal? Quantidade = null);
 public record ServicoResposta(int Id, string Nome, decimal Valor);
 public record SalvarServico(string Nome, decimal Valor);
-public record ProdutoResposta(int Id, string Nome, decimal Valor);
-public record SalvarProduto(string Nome, decimal Valor);
+public record ProdutoResposta(int Id, string Nome, decimal Valor, UnidadeProduto Unidade);
+public record SalvarProduto(string Nome, decimal Valor, UnidadeProduto Unidade);
 public record ProducaoResposta(
     int Id,
     int Ano,

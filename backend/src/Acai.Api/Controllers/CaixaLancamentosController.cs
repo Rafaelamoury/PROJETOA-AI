@@ -72,6 +72,13 @@ public class LancamentosController(AppDbContext db) : ControllerBase
             var erro = PrepararMaoObra(body, entity, servico?.Nome);
             if (erro is not null) return BadRequest(new { erro });
         }
+        else if (body.ProdutoId is int produtoId)
+        {
+            var produto = await db.Produtos.FindAsync([produtoId], ct);
+            if (produto is null) return BadRequest(new { erro = "Produto nao encontrado." });
+            var erro = PrepararCompra(body, entity, produto);
+            if (erro is not null) return BadRequest(new { erro });
+        }
         else
         {
             if (string.IsNullOrWhiteSpace(body.Descricao)) return BadRequest(new { erro = "Descricao obrigatoria." });
@@ -131,9 +138,36 @@ public class LancamentosController(AppDbContext db) : ControllerBase
         return null;
     }
 
+    private static string? PrepararCompra(CriarLancamento body, Lancamento entity, Produto produto)
+    {
+        if (body.Tipo != TipoLancamento.CustoOperacional)
+            return "A compra de produto entra como custo operacional.";
+        if (body.Quantidade is null or <= 0) return "Informe a quantidade comprada.";
+
+        var quantidade = body.Quantidade.Value;
+        entity.ProdutoId = produto.Id;
+        entity.ProdutoNome = produto.Nome;
+        entity.Quantidade = quantidade;
+        entity.UnidadeCompra = produto.Unidade;
+        entity.ValorUnitario = produto.Valor;
+        entity.Valor = Math.Round(quantidade * produto.Valor, 2);
+        entity.Descricao = string.IsNullOrWhiteSpace(body.Descricao)
+            ? $"{produto.Nome}: {quantidade.ToString("0.##", System.Globalization.CultureInfo.GetCultureInfo("pt-BR"))} {NomeUnidade(produto.Unidade)}"
+            : body.Descricao.Trim();
+        return null;
+    }
+
+    private static string NomeUnidade(UnidadeProduto unidade) => unidade switch
+    {
+        UnidadeProduto.Metro => "m",
+        UnidadeProduto.Litro => "L",
+        UnidadeProduto.Quilo => "kg",
+        _ => "un"
+    };
+
     private static LancamentoResposta Map(Lancamento l) =>
         new(l.Id, l.Data, l.Tipo, l.Descricao, l.Valor, l.ServicoMaoObraId, l.ServicoMaoObra?.Nome, l.ProducaoMensalId,
-            l.DiasAtividade, LerPessoas(l.PessoasDetalhe));
+            l.DiasAtividade, LerPessoas(l.PessoasDetalhe), l.ProdutoId, l.ProdutoNome, l.Quantidade, l.UnidadeCompra, l.ValorUnitario);
 
     private static List<PessoaMaoObraItem>? LerPessoas(string? json)
     {

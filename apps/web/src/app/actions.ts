@@ -98,6 +98,8 @@ export async function criarLancamento(formData: FormData) {
     servicoMaoObraId: servico ? Number(servico) : null,
     diasAtividade: dias ? Number(dias) : null,
     pessoas: pessoasBruto ? JSON.parse(pessoasBruto) : null,
+    produtoId: formData.get("produtoId") ? Number(formData.get("produtoId")) : null,
+    quantidade: formData.get("quantidade") ? Number(formData.get("quantidade")) : null,
   });
   revalidatePath("/caixa");
   revalidatePath("/custos");
@@ -128,7 +130,11 @@ export async function excluirServico(formData: FormData) {
 
 export async function salvarProduto(formData: FormData) {
   const id = String(formData.get("id") || "");
-  const body = { nome: String(formData.get("nome")), valor: Number(formData.get("valor")) };
+  const body = {
+    nome: String(formData.get("nome")),
+    valor: Number(formData.get("valor")),
+    unidade: String(formData.get("unidade") || "Unidade"),
+  };
   if (id) await post(`/produtos/${id}`, "PUT", body);
   else await post("/produtos", "POST", body);
   revalidatePath("/produtos");

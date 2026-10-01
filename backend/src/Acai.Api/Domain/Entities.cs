@@ -18,6 +18,7 @@ public class Produto
     public int Id { get; set; }
     public string Nome { get; set; } = string.Empty;
     public decimal Valor { get; set; }
+    public UnidadeProduto Unidade { get; set; } = UnidadeProduto.Unidade;
 }
 
 public class Lancamento
@@ -33,6 +34,12 @@ public class Lancamento
     public ProducaoMensal? ProducaoMensal { get; set; }
     public int? DiasAtividade { get; set; }
     public string? PessoasDetalhe { get; set; }
+    public int? ProdutoId { get; set; }
+    public Produto? Produto { get; set; }
+    public decimal? Quantidade { get; set; }
+    public UnidadeProduto? UnidadeCompra { get; set; }
+    public decimal? ValorUnitario { get; set; }
+    public string? ProdutoNome { get; set; }
 }
 
 public class ProducaoMensal

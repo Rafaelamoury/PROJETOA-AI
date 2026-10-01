@@ -11,6 +11,12 @@ public static class SchemaPatch
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ProducaoMensalId INTEGER NULL");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN DiasAtividade INTEGER NULL");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN PessoasDetalhe TEXT NULL");
+        await TryAlter("ALTER TABLE Produtos ADD COLUMN Unidade INTEGER NOT NULL DEFAULT 4");
+        await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ProdutoId INTEGER NULL");
+        await TryAlter("ALTER TABLE Lancamentos ADD COLUMN Quantidade TEXT NULL");
+        await TryAlter("ALTER TABLE Lancamentos ADD COLUMN UnidadeCompra INTEGER NULL");
+        await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ValorUnitario TEXT NULL");
+        await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ProdutoNome TEXT NULL");
         await TryAlter("ALTER TABLE ProducoesMensais ADD COLUMN Dia INTEGER NOT NULL DEFAULT 1");
         await TryAlter("DROP INDEX IF EXISTS \"IX_ProducoesMensais_Ano_Mes\"");
         await TryAlter("DROP INDEX IF EXISTS \"IX_ProducoesMensais_Ano_Mes_Dia\"");

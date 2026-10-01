@@ -2,18 +2,24 @@
 
 import { useState, type FormEvent } from "react";
 import { criarLancamento } from "@/app/actions";
-import { brl, hojeLocal } from "@/lib/api";
-import type { Servico } from "@/lib/types";
+import { brl, hojeLocal, unidadeDe } from "@/lib/api";
+import type { Produto, Servico } from "@/lib/types";
 import { botaoAdicionar, campo, inputCampo } from "@/components/LancarModal";
 
 type Pessoa = { nome: string; valor: string };
 
-export function FormLancamentoCusto({ servicos }: { servicos: Servico[] }) {
+export function FormLancamentoCusto({ servicos, produtos }: { servicos: Servico[]; produtos: Produto[] }) {
   const [tipo, setTipo] = useState("CustoOperacional");
   const [servicoId, setServicoId] = useState("");
+  const [produtoId, setProdutoId] = useState("");
+  const [quantidade, setQuantidade] = useState("");
   const [dias, setDias] = useState("1");
   const [pessoas, setPessoas] = useState<Pessoa[]>([{ nome: "", valor: "" }]);
   const mao = tipo === "MaoObra";
+  const produto = produtos.find((p) => String(p.id) === produtoId);
+  const unidade = produto ? unidadeDe(produto.unidade) : null;
+  const qtdNum = Math.max(0, Number(quantidade) || 0);
+  const totalProduto = produto ? Math.round(qtdNum * produto.valor * 100) / 100 : 0;
   const diasNum = Math.max(0, Number(dias) || 0);
   const somaDia = pessoas.reduce((s, p) => s + (Number(p.valor) || 0), 0);
   const total = Math.round(somaDia * (diasNum || 0) * 100) / 100;
@@ -50,8 +56,16 @@ export function FormLancamentoCusto({ servicos }: { servicos: Servico[] }) {
       );
       dados.set("diasAtividade", String(diasNum));
       dados.set("valor", String(total));
+      dados.delete("produtoId");
+      dados.delete("quantidade");
       const descricao = String(dados.get("descricao") || "").trim();
       if (!descricao) dados.set("descricao", pessoas.map((p) => p.nome.trim()).filter(Boolean).join(", "));
+    } else if (produto) {
+      dados.set("produtoId", String(produto.id));
+      dados.set("quantidade", String(qtdNum));
+      dados.set("valor", String(totalProduto));
+      const descricao = String(dados.get("descricao") || "").trim();
+      if (!descricao) dados.set("descricao", `${produto.nome}: ${qtdNum} ${unidade?.curto ?? ""}`.trim());
     }
     await criarLancamento(dados);
     if (mao) {
@@ -59,6 +73,7 @@ export function FormLancamentoCusto({ servicos }: { servicos: Servico[] }) {
       setPessoas([{ nome: "", valor: sugerido != null ? String(sugerido) : "" }]);
       setDias("1");
     }
+    if (produto) setQuantidade("");
     const valor = form.elements.namedItem("valor");
     if (valor instanceof HTMLInputElement) valor.value = "";
     const descricao = form.elements.namedItem("descricao");
@@ -161,13 +176,55 @@ export function FormLancamentoCusto({ servicos }: { servicos: Servico[] }) {
       ) : (
         <>
           <label style={campo}>
-            Valor
-            <input type="number" step="0.01" min={0} name="valor" required style={inputCampo} />
+            Produto cadastrado
+            <select value={produtoId} onChange={(e) => setProdutoId(e.target.value)} style={inputCampo}>
+              <option value="">Nenhum — gasto avulso</option>
+              {produtos.map((p) => {
+                const u = unidadeDe(p.unidade);
+                return (
+                  <option key={p.id} value={p.id}>
+                    {p.nome} — {brl(p.valor)} {u.por}
+                  </option>
+                );
+              })}
+            </select>
           </label>
-          <label style={campo}>
-            Descrição
-            <input name="descricao" required style={inputCampo} />
-          </label>
+          {produto && unidade ? (
+            <>
+              <label style={campo}>
+                Quantidade ({unidade.nome.toLowerCase()})
+                <input
+                  type="number"
+                  step="0.01"
+                  min={0.01}
+                  value={quantidade}
+                  required
+                  onChange={(e) => setQuantidade(e.target.value)}
+                  style={inputCampo}
+                />
+              </label>
+              <p style={{ margin: 0, color: "#5c4a32" }}>
+                {brl(produto.valor)} {unidade.por}
+                {qtdNum > 0 ? ` × ${qtdNum.toLocaleString("pt-BR")} ${unidade.curto}` : ""}. Total que sai do caixa:{" "}
+                <strong>{brl(totalProduto)}</strong>
+              </p>
+              <label style={campo}>
+                Observação
+                <input name="descricao" placeholder="Opcional" style={inputCampo} />
+              </label>
+            </>
+          ) : (
+            <>
+              <label style={campo}>
+                Valor
+                <input type="number" step="0.01" min={0} name="valor" required style={inputCampo} />
+              </label>
+              <label style={campo}>
+                Descrição
+                <input name="descricao" required style={inputCampo} />
+              </label>
+            </>
+          )}
         </>
       )}
       <button type="submit" style={botaoAdicionar}>

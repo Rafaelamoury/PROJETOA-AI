@@ -1,14 +1,15 @@
-import { brl, dataIsoBr } from "@/lib/api";
-import type { Lancamento, Servico } from "@/lib/types";
+import { brl, dataIsoBr, unidadeDe } from "@/lib/api";
+import type { Lancamento, Produto, Servico } from "@/lib/types";
 import { excluirLancamento } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
 import { FormLancamentoCusto } from "@/components/FormLancamentoCusto";
 import { LancarModal } from "@/components/LancarModal";
 
 export default async function CustosPage() {
-  const [lista, servicos] = await Promise.all([
+  const [lista, servicos, produtos] = await Promise.all([
     apiGet<Lancamento[]>("/lancamentos"),
     apiGet<Servico[]>("/servicos"),
+    apiGet<Produto[]>("/produtos"),
   ]);
   const custos = lista.filter((l) => l.tipo === "CustoOperacional" || l.tipo === "MaoObra");
 
@@ -18,8 +19,8 @@ export default async function CustosPage() {
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Custos</h2>
           <p>
-            Lance custos operacionais e pagamentos de mão de obra. Na mão de obra, informe quem fez, quantos dias a
-            atividade levou e o valor de cada pessoa por dia. O total sai do caixa.
+            Lance gastos avulsos, compra de material e mão de obra. No produto cadastrado, a quantidade vezes o valor
+            do metro, litro, quilo ou unidade vira o total que sai do caixa.
           </p>
         </div>
         <LancarModal
@@ -27,7 +28,7 @@ export default async function CustosPage() {
           botao="+ Lançar custo"
           dica="Depois de adicionar, a aba continua aberta para o próximo lançamento."
         >
-          <FormLancamentoCusto servicos={servicos} />
+          <FormLancamentoCusto servicos={servicos} produtos={produtos} />
         </LancarModal>
       </div>
       <table style={{ width: "100%", marginTop: 8, borderCollapse: "collapse" }}>
@@ -36,6 +37,7 @@ export default async function CustosPage() {
             <th>Data</th>
             <th>Tipo</th>
             <th>Descrição</th>
+            <th>Quantidade</th>
             <th>Quem fez</th>
             <th>Dias</th>
             <th>Pessoas</th>
@@ -52,6 +54,7 @@ export default async function CustosPage() {
                 {l.descricao}
                 {l.servicoNome && !l.descricao.includes(l.servicoNome) ? ` (${l.servicoNome})` : ""}
               </td>
+              <td>{textoQuantidade(l)}</td>
               <td>{textoPessoas(l)}</td>
               <td>{l.diasAtividade ?? "—"}</td>
               <td>{l.pessoas?.length ?? "—"}</td>
@@ -74,6 +77,14 @@ export default async function CustosPage() {
       </table>
     </div>
   );
+}
+
+function textoQuantidade(l: Lancamento) {
+  if (l.quantidade == null || !l.unidade) return "—";
+  const unidade = unidadeDe(l.unidade);
+  const qtd = l.quantidade.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+  const unitario = l.valorUnitario != null ? ` × ${brl(l.valorUnitario)}` : "";
+  return `${qtd} ${unidade.curto}${unitario}`;
 }
 
 function textoPessoas(l: Lancamento) {

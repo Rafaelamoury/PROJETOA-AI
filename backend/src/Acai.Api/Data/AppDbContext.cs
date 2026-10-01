@@ -21,6 +21,8 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
         modelBuilder.Entity<ServicoMaoObra>().Property(x => x.Valor).HasPrecision(18, 2);
         modelBuilder.Entity<Produto>().Property(x => x.Valor).HasPrecision(18, 2);
         modelBuilder.Entity<Lancamento>().Property(x => x.Valor).HasPrecision(18, 2);
+        modelBuilder.Entity<Lancamento>().Property(x => x.Quantidade).HasPrecision(18, 2);
+        modelBuilder.Entity<Lancamento>().Property(x => x.ValorUnitario).HasPrecision(18, 2);
         modelBuilder.Entity<ProducaoMensal>().Property(x => x.QuantidadeLatas).HasPrecision(18, 2);
         modelBuilder.Entity<ProducaoMensal>().Property(x => x.ValorLata).HasPrecision(18, 2);
         modelBuilder.Entity<ProducaoMensal>().Property(x => x.CustosExtracao).HasPrecision(18, 2);
@@ -35,6 +37,11 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(l => l.ProducaoMensalId)
             .OnDelete(DeleteBehavior.Cascade);
+        modelBuilder.Entity<Lancamento>()
+            .HasOne(l => l.Produto)
+            .WithMany()
+            .HasForeignKey(l => l.ProdutoId)
+            .OnDelete(DeleteBehavior.SetNull);
         modelBuilder.Entity<Usuario>().HasIndex(x => x.Cpf).IsUnique();
         modelBuilder.Entity<AtividadePlanejamento>().ToTable("AtividadesPlanejamento");
     }
