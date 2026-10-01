@@ -35,7 +35,6 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
         <div>
           <p style={{ letterSpacing: "0.14em", fontSize: 12, color: "#4a1c6b", margin: 0 }}>RR AÇAÍ</p>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 36, margin: "6px 0 8px" }}>Producao, custos e lucro</h2>
-          <p style={{ fontFamily: "Georgia, serif", fontSize: 20, color: "#4a1c6b", margin: "0 0 10px", maxWidth: 640 }}>{frase}</p>
           <p style={{ margin: 0, maxWidth: 640, opacity: 0.8 }}>
             Visao do que o produtor acompanha na safra: latas tiradas, receita, custo para tirar, gastos do campo, mao
             de obra e o que sobrou no mes. Escolha o mes no grafico ou nas abas.
@@ -55,6 +54,20 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
             ))}
           </select>
         </label>
+      </div>
+
+      <div
+        style={{
+          marginTop: 20,
+          padding: "18px 22px",
+          borderRadius: 16,
+          background: "#4a1c6b",
+          color: "#fffdf8",
+        }}
+      >
+        <p style={{ fontFamily: "Georgia, serif", fontSize: 28, lineHeight: 1.35, margin: 0 }}>
+          <strong>Frase do dia:</strong> {frase}
+        </p>
       </div>
 
       <div style={{ display: "flex", gap: 6, flexWrap: "wrap", margin: "20px 0 24px" }}>
