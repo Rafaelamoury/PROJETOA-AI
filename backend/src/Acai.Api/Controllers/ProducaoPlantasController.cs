@@ -136,7 +136,7 @@ public class PlantasController(AppDbContext db) : ControllerBase
             e.PalmeirasPorPe,
             e.PesComTresPalmeiras,
             e.MesesEntreCachos,
-            Palmeiras(e),
+            Math.Max(0, e.QuantidadeJaProduzem),
             previsoes);
     }
 
@@ -148,7 +148,7 @@ public class PlantasController(AppDbContext db) : ControllerBase
         string periodo)
     {
         var ondas = OndasQueAmadurecem(meses, e.MesesParaMadurar, e.MesesEntreCachos);
-        var cachos = (decimal)Palmeiras(e) * ondas;
+        var cachos = (decimal)Math.Max(0, e.QuantidadeJaProduzem) * ondas;
         var latas = e.CachosPorLata > 0 ? Math.Round(cachos / e.CachosPorLata, 2) : 0m;
         var inicio = hoje.AddMonths(-meses);
         var noPeriodo = producoes.Where(p => Data(p) >= inicio && Data(p) <= hoje).ToList();
@@ -158,9 +158,6 @@ public class PlantasController(AppDbContext db) : ControllerBase
         var faturamento = valor is null ? (decimal?)null : Math.Round(latas * valor.Value, 2);
         return new(meses, periodo, cachos, latas, valor is null ? null : Math.Round(valor.Value, 2), faturamento, doPeriodo is null && geral is not null);
     }
-
-    private static int Palmeiras(EstoquePlantas e) =>
-        Math.Max(0, e.QuantidadeMedio + e.QuantidadeGrande) * Math.Max(0, e.PalmeirasPorPe) + Math.Max(0, e.PesComTresPalmeiras);
 
     private static int OndasQueAmadurecem(int horizonteMeses, int mesesParaMadurar, int mesesEntreCachos)
     {

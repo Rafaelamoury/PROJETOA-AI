@@ -55,9 +55,8 @@ export default function ComoUsarPage() {
       </Bloco>
 
       <Bloco n="8" titulo="Plantas">
-        Informe os pés pequeno, médio e grande, e os que já produzem. A previsão soma médio e grande, conta 2 palmeiras
-        por pé e soma os pés que têm uma terceira. O cacho não fica maduro antes do prazo, e o intervalo entre um cacho
-        e outro pode passar de um mês. A aba mostra latas e faturamento do trimestre, semestre, nove meses e ano.
+        Médio e grande entram como uma unidade cada. Em Já produzem você informa o número já com a sua conta, com as
+        palmeiras dobradas e as que têm três. A tabela segue só esse número. O cacho não fica maduro antes do prazo.
       </Bloco>
 
       <Bloco n="9" titulo="Planejamento">

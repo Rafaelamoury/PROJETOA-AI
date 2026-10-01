@@ -8,16 +8,15 @@ const card = { background: "#fffdf8", border: "1px solid #e4d9c8", borderRadius:
 
 export default async function PlantasPage() {
   const p = await apiGet<Plantas>("/plantas");
-  const pronto = p.cachosPorLata > 0 && p.mesesParaMadurar > 0 && p.palmeirasPorPe > 0 && p.mesesEntreCachos > 0;
-  const pesMedioGrande = p.quantidadeMedio + p.quantidadeGrande;
+  const pronto = p.cachosPorLata > 0 && p.mesesParaMadurar > 0 && p.mesesEntreCachos > 0;
 
   return (
     <div>
       <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Plantas</h2>
       <p>
-        Pequeno, médio e grande são pés. A previsão usa médio e grande: cada pé vale um número de palmeiras, e os pés
-        com uma terceira palmeira entram a mais. O cacho só conta como maduro depois do prazo, e o intervalo entre um
-        cacho e outro pode ser maior que um mês.
+        Médio e grande entram como uma unidade cada, só para contar o plantio. Em Já produzem você coloca o número que
+        já fez a conta: a maior parte com 2 palmeiras juntas e as que têm 3. A tabela usa só esse número, do jeito que
+        você informar. O cacho só conta como maduro depois do prazo.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 24 }}>
@@ -27,7 +26,6 @@ export default async function PlantasPage() {
           ["Grande", p.quantidadeGrande],
           ["Total P/M/G", p.total],
           ["Já produzem", p.quantidadeJaProduzem],
-          ["Palmeiras na conta", p.palmeiras],
         ].map(([nome, quantidade]) => (
           <div key={String(nome)} style={card}>
             <p style={{ margin: 0, opacity: 0.7 }}>{nome}</p>
@@ -65,14 +63,6 @@ export default async function PlantasPage() {
             <input type="number" min={0} name="mesesParaMadurar" defaultValue={p.mesesParaMadurar || ""} required style={inputCampo} />
           </label>
           <label style={campo}>
-            Palmeiras por pé
-            <input type="number" min={0} name="palmeirasPorPe" defaultValue={p.palmeirasPorPe || 2} required style={inputCampo} />
-          </label>
-          <label style={campo}>
-            Pés com 3 palmeiras
-            <input type="number" min={0} name="pesComTresPalmeiras" defaultValue={p.pesComTresPalmeiras || ""} required style={inputCampo} />
-          </label>
-          <label style={campo}>
             Meses entre um cacho e outro
             <input type="number" min={0} name="mesesEntreCachos" defaultValue={p.mesesEntreCachos || 2} required style={inputCampo} />
           </label>
@@ -85,11 +75,8 @@ export default async function PlantasPage() {
       {pronto ? (
         <>
           <p>
-            Médio e grande somam <strong>{fmt(pesMedioGrande)} pés</strong>. Cada pé vale{" "}
-            <strong>{p.palmeirasPorPe} {p.palmeirasPorPe === 1 ? "palmeira" : "palmeiras"}</strong>
-            {p.pesComTresPalmeiras > 0 ? `, mais ${fmt(p.pesComTresPalmeiras)} da terceira palmeira` : ""}. São{" "}
-            <strong>{fmt(p.palmeiras)} palmeiras</strong> na conta. O pequeno não entra. Os que já produzem ficam só
-            como contagem do campo.
+            A tabela parte de <strong>{fmt(p.quantidadeJaProduzem)}</strong>, o número que você colocou em Já produzem.
+            Médio e grande não mudam esses cachos.
           </p>
           <p>
             A Embrapa descreve de <strong>6 a 8 cachos por palmeira no ano</strong> e o fruto maduro cerca de{" "}
@@ -136,8 +123,8 @@ export default async function PlantasPage() {
         </>
       ) : (
         <p>
-          Informe quantos cachos dão uma lata, quantos meses o cacho leva para madurar, quantas palmeiras valem um pé e
-          de quantos em quantos meses nasce outro cacho.
+          Informe quantos cachos dão uma lata, quantos meses o cacho leva para madurar e de quantos em quantos meses nasce
+          outro cacho.
         </p>
       )}
     </div>
