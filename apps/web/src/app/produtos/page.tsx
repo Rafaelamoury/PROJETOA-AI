@@ -71,7 +71,7 @@ export default async function ProdutosPage() {
             </form>
             <form action={excluirProduto}>
               <input type="hidden" name="id" value={p.id} />
-              <button type="submit" style={{ color: "#8a1c1c" }}>
+              <button type="submit" className="neo-texto">
                 excluir
               </button>
             </form>

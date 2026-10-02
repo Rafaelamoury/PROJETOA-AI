@@ -38,32 +38,36 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
   const nav = user?.isAdmin ? [...links, { href: "/usuarios", label: "Usuarios" }] : links;
 
   return (
-    <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", minHeight: "100vh" }}>
+    <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", minHeight: "100vh", background: "var(--bg)", color: "var(--ink)" }}>
       <aside
         style={{
-          background: "linear-gradient(180deg, #3a1454 0%, #1f6b45 100%)",
-          color: "#fffdf8",
-          padding: "28px 20px",
+          padding: "28px 18px",
           display: "flex",
           flexDirection: "column",
+          background: "var(--bg)",
         }}
       >
-        <Link href="/" style={{ color: "inherit", textDecoration: "none" }}>
-          <p style={{ letterSpacing: "0.18em", fontSize: 11, opacity: 0.8, margin: 0 }}>RR</p>
+        <Link href="/" style={{ color: "inherit", textDecoration: "none", padding: "8px 12px" }}>
+          <p style={{ letterSpacing: "0.18em", fontSize: 11, color: "var(--purple)", margin: 0 }}>RR</p>
           <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, margin: "4px 0 28px" }}>Açaí</h1>
         </Link>
-        <nav style={{ display: "flex", flexDirection: "column", gap: 6, flex: 1 }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 10, flex: 1 }}>
           {nav.map((l) => {
             const active = l.href === "/" ? path === "/" : path === l.href || path.startsWith(`${l.href}/`);
             return (
               <Link
                 key={l.href}
                 href={l.href}
+                className={active ? "neo-press" : undefined}
                 style={{
-                  padding: "10px 12px",
-                  borderRadius: 10,
-                  background: active ? "rgba(255,255,255,0.18)" : "transparent",
+                  padding: "10px 14px",
+                  borderRadius: 14,
+                  background: "var(--bg)",
                   fontWeight: active ? 700 : 500,
+                  color: active ? "var(--purple)" : "var(--ink)",
+                  boxShadow: active
+                    ? "inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--light)"
+                    : "5px 5px 10px var(--dark), -5px -5px 10px var(--light)",
                 }}
               >
                 {l.label}
@@ -72,10 +76,10 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
           })}
         </nav>
         {user && (
-          <div style={{ fontSize: 13, opacity: 0.9 }}>
+          <div style={{ fontSize: 13, color: "var(--muted)" }}>
             <p style={{ margin: "0 0 8px" }}>{user.nome}</p>
             <form action={sair}>
-              <button type="submit" style={{ background: "transparent", color: "#fff", border: "1px solid rgba(255,255,255,0.4)", borderRadius: 8, padding: "6px 10px" }}>
+              <button type="submit" style={{ padding: "8px 14px" }}>
                 Sair
               </button>
             </form>

@@ -75,10 +75,13 @@ export default async function PlanejamentoPage({
               href={`/planejamento?ano=${ano}&vista=${v.id}`}
               style={{
                 padding: "8px 14px",
-                borderRadius: 8,
-                background: v.id === vista ? "#4a1c6b" : "#fffdf8",
-                color: v.id === vista ? "white" : "#1c1424",
-                border: "1px solid #e4d9c8",
+                borderRadius: 14,
+                background: "var(--bg)",
+                color: v.id === vista ? "var(--purple)" : "var(--ink)",
+                fontWeight: v.id === vista ? 700 : 500,
+                boxShadow: v.id === vista
+                  ? "inset 4px 4px 8px #cdc4b8, inset -4px -4px 8px #f7f3ec"
+                  : "5px 5px 10px #cdc4b8, -5px -5px 10px #f7f3ec",
               }}
             >
               {v.label}
@@ -119,7 +122,7 @@ export default async function PlanejamentoPage({
                   </form>
                   <form action={excluirAtividadePlanejamento} style={{ marginTop: 4 }}>
                     <input type="hidden" name="id" value={a.id} />
-                    <button type="submit" style={{ color: "#8a1c1c", border: 0, background: "transparent" }}>
+                    <button type="submit" className="neo-texto">
                       excluir
                     </button>
                   </form>

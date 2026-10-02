@@ -1,13 +1,17 @@
 ﻿:root {
-  --bg: #f3efe6;
-  --ink: #1c1424;
-  --purple: #4a1c6b;
-  --purple-2: #6b2d8b;
-  --green: #1f6b45;
-  --gold: #c4a35a;
-  --card: #fffdf8;
-  --line: #e4d9c8;
+  --bg: #e6dfd4;
+  --ink: #3a322b;
+  --muted: #6f655c;
+  --purple: #5c4570;
+  --green: #2f6b4f;
+  --light: #f7f3ec;
+  --dark: #cdc4b8;
+  --shadow: 8px 8px 16px var(--dark), -8px -8px 16px var(--light);
+  --shadow-sm: 5px 5px 10px var(--dark), -5px -5px 10px var(--light);
+  --inset: inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--light);
 }
+
+* { box-sizing: border-box; }
 
 body {
   background: var(--bg);
@@ -17,4 +21,60 @@ body {
 }
 
 a { color: inherit; text-decoration: none; }
-input, select, button, textarea { font: inherit; }
+
+input, select, textarea, button {
+  font: inherit;
+  background: var(--bg) !important;
+  color: var(--ink) !important;
+  border: none !important;
+  border-radius: 14px !important;
+  box-shadow: var(--shadow-sm) !important;
+}
+
+input, select, textarea {
+  box-shadow: var(--inset) !important;
+  padding: 10px 12px;
+}
+
+button { cursor: pointer; }
+button:active, a.neo-press, button.neo-press {
+  box-shadow: var(--inset) !important;
+  color: var(--purple) !important;
+}
+
+button.neo-texto, button.neo-texto:active {
+  background: transparent !important;
+  box-shadow: none !important;
+  border-radius: 8px !important;
+  color: #8a1c1c !important;
+  padding: 4px 8px;
+}
+
+table {
+  background: var(--bg) !important;
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  border-collapse: separate !important;
+  border-spacing: 0;
+  overflow: hidden;
+}
+
+th { color: var(--purple); }
+
+fieldset {
+  background: var(--bg);
+  border: none !important;
+  border-radius: 20px;
+  box-shadow: var(--shadow-sm);
+}
+
+main div[style*="border-radius: 16px"],
+main div[style*="border-radius:16px"],
+main div[style*="border-radius: 10px"],
+main div[style*="border-radius:10px"],
+main section[style*="border-radius: 16px"],
+main section[style*="border-radius:16px"] {
+  background: var(--bg) !important;
+  border: none !important;
+  box-shadow: var(--shadow) !important;
+}

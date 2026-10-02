@@ -135,7 +135,7 @@ export default async function ProducaoPage({
                     </LancarModal>
                     <form action={excluirProducao}>
                       <input type="hidden" name="id" value={p.id} />
-                      <button type="submit" style={{ color: "#8a1c1c" }}>
+                      <button type="submit" className="neo-texto">
                         excluir
                       </button>
                     </form>
@@ -199,7 +199,7 @@ export default async function ProducaoPage({
                     </LancarModal>
                     <form action={excluirCasa}>
                       <input type="hidden" name="id" value={c.id} />
-                      <button type="submit" style={{ color: "#8a1c1c" }}>
+                      <button type="submit" className="neo-texto">
                         excluir
                       </button>
                     </form>

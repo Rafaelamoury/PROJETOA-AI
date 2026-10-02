@@ -5,7 +5,7 @@ import { useState, type CSSProperties, type ReactNode } from "react";
 const overlay: CSSProperties = {
   position: "fixed",
   inset: 0,
-  background: "rgba(28, 20, 36, 0.45)",
+  background: "rgba(58, 50, 43, 0.28)",
   display: "grid",
   placeItems: "center",
   zIndex: 80,
@@ -16,10 +16,10 @@ const panel: CSSProperties = {
   width: "min(560px, 100%)",
   maxHeight: "90vh",
   overflow: "auto",
-  background: "#fff",
-  borderRadius: 16,
+  background: "var(--bg)",
+  borderRadius: 24,
   padding: 24,
-  boxShadow: "0 24px 60px rgba(0,0,0,0.18)",
+  boxShadow: "10px 10px 20px var(--dark), -10px -10px 20px var(--light)",
 };
 
 export const campo: CSSProperties = {
@@ -28,16 +28,18 @@ export const campo: CSSProperties = {
   fontSize: 12,
   fontWeight: 700,
   letterSpacing: "0.02em",
-  color: "#4a1c6b",
+  color: "var(--purple)",
 };
 
 export const inputCampo: CSSProperties = {
   padding: "10px 12px",
-  borderRadius: 8,
-  border: "1px solid #e4d9c8",
+  borderRadius: 14,
+  border: "none",
   fontWeight: 400,
-  color: "#1c1424",
+  color: "var(--ink)",
   fontSize: 15,
+  background: "var(--bg)",
+  boxShadow: "inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--light)",
 };
 
 export function LancarModal({
@@ -61,12 +63,9 @@ export function LancarModal({
         type="button"
         onClick={() => setAberto(true)}
         style={{
-          background: "#4a1c6b",
-          color: "white",
-          border: 0,
-          borderRadius: 10,
           padding: compact ? "8px 12px" : "10px 16px",
           fontWeight: 600,
+          color: "var(--purple)",
         }}
       >
         {botao}
@@ -83,7 +82,7 @@ export function LancarModal({
                 type="button"
                 onClick={() => setAberto(false)}
                 aria-label="Fechar"
-                style={{ border: 0, background: "transparent", fontSize: 22, lineHeight: 1, cursor: "pointer" }}
+                style={{ fontSize: 22, lineHeight: 1, padding: "4px 10px" }}
               >
                 ×
               </button>
@@ -94,9 +93,6 @@ export function LancarModal({
                 type="button"
                 onClick={() => setAberto(false)}
                 style={{
-                  background: "transparent",
-                  border: "1px solid #e4d9c8",
-                  borderRadius: 8,
                   padding: "8px 14px",
                 }}
               >
@@ -111,10 +107,7 @@ export function LancarModal({
 }
 
 export const botaoAdicionar: CSSProperties = {
-  background: "#4a1c6b",
-  color: "white",
-  border: 0,
-  borderRadius: 8,
+  color: "var(--purple)",
   padding: "10px 16px",
   fontWeight: 600,
   marginTop: 8,

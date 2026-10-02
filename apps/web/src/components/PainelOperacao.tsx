@@ -6,11 +6,11 @@ import { brl } from "@/lib/api";
 import type { MesOperacao, Painel } from "@/lib/types";
 
 const card: CSSProperties = {
-  background: "#fffdf8",
-  border: "1px solid #e4d9c8",
-  borderRadius: 16,
+  background: "var(--bg)",
+  border: "none",
+  borderRadius: 20,
   padding: 20,
-  boxShadow: "0 10px 30px rgba(74,28,107,0.06)",
+  boxShadow: "8px 8px 16px #cdc4b8, -8px -8px 16px #f7f3ec",
 };
 
 const COR_RECEITA = "#1f6b45";
@@ -45,7 +45,7 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
           <select
             value={data.ano}
             onChange={(e) => ir(Number(e.target.value), data.mes)}
-            style={{ padding: "10px 12px", borderRadius: 8, border: "1px solid #e4d9c8", fontSize: 15, minWidth: 120 }}
+            style={{ fontSize: 15, minWidth: 120 }}
           >
             {data.anos.map((a) => (
               <option key={a} value={a}>
@@ -60,13 +60,14 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
         <span
           style={{
             display: "inline",
-            background: "#4a1c6b",
-            color: "#fffdf8",
+            background: "#ddd4e4",
+            color: "#3d2848",
             fontFamily: "Georgia, serif",
             fontSize: 20,
             lineHeight: 1.7,
             padding: "6px 12px",
-            borderRadius: 10,
+            borderRadius: 12,
+            boxShadow: "4px 4px 8px #cdc4b8, -4px -4px 8px #f7f3ec",
             boxDecorationBreak: "clone",
             WebkitBoxDecorationBreak: "clone",
           }}
@@ -83,15 +84,12 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
               key={m.mes}
               type="button"
               onClick={() => ir(data.ano, m.mes)}
+              className={ativo ? "neo-press" : undefined}
               style={{
-                border: ativo ? "0" : "1px solid #e4d9c8",
-                background: ativo ? "#4a1c6b" : "#fff",
-                color: ativo ? "#fff" : "#1c1424",
                 borderRadius: 999,
                 padding: "8px 12px",
                 fontSize: 13,
                 fontWeight: ativo ? 700 : 500,
-                cursor: "pointer",
               }}
             >
               {m.nome}

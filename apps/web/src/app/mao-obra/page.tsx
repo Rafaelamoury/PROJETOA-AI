@@ -40,7 +40,7 @@ export default async function MaoObraPage() {
           </form>
           <form action={excluirServico}>
             <input type="hidden" name="id" value={s.id} />
-            <button type="submit" style={{ color: "#8a1c1c" }}>
+            <button type="submit" className="neo-texto">
               excluir
             </button>
           </form>

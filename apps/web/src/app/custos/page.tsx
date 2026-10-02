@@ -65,7 +65,7 @@ export default async function CustosPage() {
                 ) : (
                   <form action={excluirLancamento}>
                     <input type="hidden" name="id" value={l.id} />
-                    <button type="submit" style={{ border: 0, background: "transparent", color: "#8a1c1c" }}>
+                    <button type="submit" className="neo-texto">
                       excluir
                     </button>
                   </form>
