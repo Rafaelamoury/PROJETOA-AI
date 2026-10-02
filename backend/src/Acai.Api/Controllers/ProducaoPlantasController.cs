@@ -147,25 +147,25 @@ public class PlantasController(AppDbContext db) : ControllerBase
         int meses,
         string periodo)
     {
-        var ondas = OndasQueAmadurecem(meses, e.MesesParaMadurar, e.MesesEntreCachos);
-        var cachos = (decimal)Math.Max(0, e.QuantidadeJaProduzem) * ondas;
-        var latas = e.CachosPorLata > 0 ? Math.Round(cachos / e.CachosPorLata, 2) : 0m;
+        var plantas = Math.Max(0, e.QuantidadeJaProduzem);
+        var baixa = DoAno(plantas, 6, meses, e.CachosPorLata);
+        var alta = DoAno(plantas, 8, meses, e.CachosPorLata);
         var inicio = hoje.AddMonths(-meses);
         var noPeriodo = producoes.Where(p => Data(p) >= inicio && Data(p) <= hoje).ToList();
         var doPeriodo = Media(noPeriodo);
         var geral = Media(producoes);
         var valor = doPeriodo ?? geral;
-        var faturamento = valor is null ? (decimal?)null : Math.Round(latas * valor.Value, 2);
-        return new(meses, periodo, cachos, latas, valor is null ? null : Math.Round(valor.Value, 2), faturamento, doPeriodo is null && geral is not null);
+        var preco = valor is null ? (decimal?)null : Math.Round(valor.Value, 2);
+        var faturamento = preco is null ? (decimal?)null : Math.Round(baixa.LatasExatas * preco.Value, 2);
+        var faturamentoMax = preco is null ? (decimal?)null : Math.Round(alta.LatasExatas * preco.Value, 2);
+        return new(meses, periodo, baixa.Cachos, baixa.Latas, preco, faturamento, doPeriodo is null && geral is not null, alta.Cachos, alta.Latas, faturamentoMax);
     }
 
-    private static int OndasQueAmadurecem(int horizonteMeses, int mesesParaMadurar, int mesesEntreCachos)
+    private static (decimal Cachos, decimal Latas, decimal LatasExatas) DoAno(int plantas, int cachosPorPalmeiraNoAno, int meses, int cachosPorLata)
     {
-        if (horizonteMeses < 1 || mesesParaMadurar < 1 || mesesEntreCachos < 1) return 0;
-        var ondas = 0;
-        for (var nasce = 0; nasce + mesesParaMadurar <= horizonteMeses; nasce += mesesEntreCachos)
-            ondas++;
-        return ondas;
+        var cachosExatos = plantas * cachosPorPalmeiraNoAno * meses / 12m;
+        var latasExatas = cachosPorLata > 0 ? cachosExatos / cachosPorLata : 0m;
+        return (Math.Round(cachosExatos, 2), Math.Round(latasExatas, 2), latasExatas);
     }
 
     private static DateOnly Data(ProducaoMensal p)

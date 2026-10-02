@@ -8,15 +8,15 @@ const card = { background: "#fffdf8", border: "1px solid #e4d9c8", borderRadius:
 
 export default async function PlantasPage() {
   const p = await apiGet<Plantas>("/plantas");
-  const pronto = p.cachosPorLata > 0 && p.mesesParaMadurar > 0 && p.mesesEntreCachos > 0;
+  const pronto = p.cachosPorLata > 0;
 
   return (
     <div>
       <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Plantas</h2>
       <p>
         Médio e grande entram como uma unidade cada, só para contar o plantio. Em Já produzem você coloca o número que
-        já fez a conta: a maior parte com 2 palmeiras juntas e as que têm 3. A tabela usa só esse número, do jeito que
-        você informar. O cacho só conta como maduro depois do prazo.
+        já fez a conta: a maior parte com 2 palmeiras juntas e as que têm 3. A tabela usa só esse número. Cada
+        açaizeira entra com 6 a 8 cachos no ano, e esse total se reparte em trimestre, semestre, nove meses e ano.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 24 }}>
@@ -58,14 +58,8 @@ export default async function PlantasPage() {
             Cachos para dar 1 lata
             <input type="number" min={0} name="cachosPorLata" defaultValue={p.cachosPorLata || ""} required style={inputCampo} />
           </label>
-          <label style={campo}>
-            Meses para o cacho ficar maduro
-            <input type="number" min={0} name="mesesParaMadurar" defaultValue={p.mesesParaMadurar || ""} required style={inputCampo} />
-          </label>
-          <label style={campo}>
-            Meses entre um cacho e outro
-            <input type="number" min={0} name="mesesEntreCachos" defaultValue={p.mesesEntreCachos || 2} required style={inputCampo} />
-          </label>
+          <input type="hidden" name="mesesParaMadurar" value={p.mesesParaMadurar || 0} />
+          <input type="hidden" name="mesesEntreCachos" value={p.mesesEntreCachos || 0} />
           <button type="submit" style={{ background: "#1f6b45", color: "white", border: 0, borderRadius: 8, padding: "10px 16px" }}>
             Salvar
           </button>
@@ -75,15 +69,12 @@ export default async function PlantasPage() {
       {pronto ? (
         <>
           <p>
-            A tabela parte de <strong>{fmt(p.quantidadeJaProduzem)}</strong>, o número que você colocou em Já produzem.
-            Médio e grande não mudam esses cachos.
+            A tabela parte de <strong>{fmt(p.quantidadeJaProduzem)}</strong> açaizeiras que já produzem. Médio e grande
+            não entram nessa conta.
           </p>
           <p>
-            A Embrapa descreve de <strong>6 a 8 cachos por palmeira no ano</strong> e o fruto maduro cerca de{" "}
-            <strong>6 meses</strong> depois da flor. Aqui o intervalo está em{" "}
-            <strong>{p.mesesEntreCachos} {p.mesesEntreCachos === 1 ? "mês" : "meses"}</strong> e o cacho leva{" "}
-            <strong>{p.mesesParaMadurar} {p.mesesParaMadurar === 1 ? "mês" : "meses"}</strong> para madurar. Antes
-            desse prazo a tabela fica em zero. Uma lata sai de{" "}
+            A Embrapa descreve de <strong>6 a 8 cachos por açaizeira no ano</strong>. O trimestre leva um quarto desse
+            ano, o semestre a metade, os nove meses três quartos e o ano o total. Uma lata sai de{" "}
             <strong>{p.cachosPorLata} {p.cachosPorLata === 1 ? "cacho" : "cachos"}</strong>.
           </p>
           <div style={{ overflowX: "auto" }}>
@@ -91,7 +82,7 @@ export default async function PlantasPage() {
               <thead>
                 <tr style={{ textAlign: "left", borderBottom: "1px solid #e4d9c8" }}>
                   <th style={{ padding: 8 }}>Período</th>
-                  <th style={{ padding: 8 }}>Cachos maduros</th>
+                  <th style={{ padding: 8 }}>Cachos no período</th>
                   <th style={{ padding: 8 }}>Latas</th>
                   <th style={{ padding: 8 }}>Valor médio da lata</th>
                   <th style={{ padding: 8 }}>Faturamento</th>
@@ -104,13 +95,13 @@ export default async function PlantasPage() {
                       {item.periodo}
                       <span style={{ opacity: 0.65 }}> · {item.meses} meses</span>
                     </td>
-                    <td style={{ padding: 8 }}>{fmt(item.cachos)}</td>
-                    <td style={{ padding: 8 }}>{fmt(item.latas)}</td>
+                    <td style={{ padding: 8 }}>{faixa(item.cachos, item.cachosMax)}</td>
+                    <td style={{ padding: 8 }}>{faixa(item.latas, item.latasMax)}</td>
                     <td style={{ padding: 8 }}>
                       {item.valorMedioLata == null ? "sem produção lançada" : brl(item.valorMedioLata)}
                       {item.valorDaMediaGeral ? " (média geral)" : ""}
                     </td>
-                    <td style={{ padding: 8 }}>{item.faturamento == null ? "—" : brl(item.faturamento)}</td>
+                    <td style={{ padding: 8 }}>{item.faturamento == null ? "—" : faixa(item.faturamento, item.faturamentoMax, brl)}</td>
                   </tr>
                 ))}
               </tbody>
@@ -123,8 +114,7 @@ export default async function PlantasPage() {
         </>
       ) : (
         <p>
-          Informe quantos cachos dão uma lata, quantos meses o cacho leva para madurar e de quantos em quantos meses nasce
-          outro cacho.
+          Informe quantos cachos dão uma lata para ver o trimestre, o semestre e o ano.
         </p>
       )}
     </div>
@@ -133,4 +123,9 @@ export default async function PlantasPage() {
 
 function fmt(n: number) {
   return n.toLocaleString("pt-BR", { maximumFractionDigits: 2 });
+}
+
+function faixa(min: number, max: number, formatar: (n: number) => string = fmt) {
+  if (min === max) return formatar(min);
+  return `${formatar(min)} a ${formatar(max)}`;
 }

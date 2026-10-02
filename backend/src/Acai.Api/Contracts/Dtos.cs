@@ -81,7 +81,10 @@ public record PrevisaoPlantio(
     decimal Latas,
     decimal? ValorMedioLata,
     decimal? Faturamento,
-    bool ValorDaMediaGeral);
+    bool ValorDaMediaGeral,
+    decimal CachosMax,
+    decimal LatasMax,
+    decimal? FaturamentoMax);
 public record PlantasResposta(
     int QuantidadePequeno,
     int QuantidadeMedio,

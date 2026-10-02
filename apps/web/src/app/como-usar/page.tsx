@@ -56,7 +56,8 @@ export default function ComoUsarPage() {
 
       <Bloco n="8" titulo="Plantas">
         Médio e grande entram como uma unidade cada. Em Já produzem você informa o número já com a sua conta, com as
-        palmeiras dobradas e as que têm três. A tabela segue só esse número. O cacho não fica maduro antes do prazo.
+        palmeiras dobradas e as que têm três. A tabela segue só esse número. Cada açaizeira entra com 6 a 8 cachos no
+        ano, e esse total se divide em trimestre, semestre, nove meses e ano.
       </Bloco>
 
       <Bloco n="9" titulo="Adubação">

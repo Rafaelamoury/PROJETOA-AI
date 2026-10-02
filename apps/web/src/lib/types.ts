@@ -13,6 +13,9 @@ export type PrevisaoPlantio = {
   valorMedioLata: number | null;
   faturamento: number | null;
   valorDaMediaGeral: boolean;
+  cachosMax: number;
+  latasMax: number;
+  faturamentoMax: number | null;
 };
 
 export type Plantas = {
