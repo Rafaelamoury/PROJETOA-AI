@@ -5,7 +5,7 @@ import { useState, type CSSProperties, type ReactNode } from "react";
 const overlay: CSSProperties = {
   position: "fixed",
   inset: 0,
-  background: "rgba(58, 50, 43, 0.28)",
+  background: "rgba(63, 24, 76, 0.45)",
   display: "grid",
   placeItems: "center",
   zIndex: 80,
@@ -16,10 +16,10 @@ const panel: CSSProperties = {
   width: "min(560px, 100%)",
   maxHeight: "90vh",
   overflow: "auto",
-  background: "var(--bg)",
+  background: "var(--card)",
   borderRadius: 24,
   padding: 24,
-  boxShadow: "10px 10px 20px var(--dark), -10px -10px 20px var(--light)",
+  boxShadow: "var(--shadow)",
 };
 
 export const campo: CSSProperties = {
@@ -38,8 +38,8 @@ export const inputCampo: CSSProperties = {
   fontWeight: 400,
   color: "var(--ink)",
   fontSize: 15,
-  background: "var(--bg)",
-  boxShadow: "inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--light)",
+  background: "var(--card)",
+  boxShadow: "none",
 };
 
 export function LancarModal({
@@ -82,6 +82,7 @@ export function LancarModal({
                 type="button"
                 onClick={() => setAberto(false)}
                 aria-label="Fechar"
+                className="neo-secundario"
                 style={{ fontSize: 22, lineHeight: 1, padding: "4px 10px" }}
               >
                 ×
@@ -92,6 +93,7 @@ export function LancarModal({
               <button
                 type="button"
                 onClick={() => setAberto(false)}
+                className="neo-secundario"
                 style={{
                   padding: "8px 14px",
                 }}

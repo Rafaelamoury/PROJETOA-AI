@@ -44,7 +44,8 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
           padding: "28px 18px",
           display: "flex",
           flexDirection: "column",
-          background: "var(--bg)",
+          background: "var(--sidebar)",
+          color: "var(--on-sidebar)",
           maxHeight: "100vh",
           overflow: "auto",
           position: "sticky",
@@ -52,26 +53,22 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
         }}
       >
         <Link href="/" style={{ color: "inherit", textDecoration: "none", padding: "8px 12px" }}>
-          <p style={{ letterSpacing: "0.18em", fontSize: 11, color: "var(--purple)", margin: 0 }}>RR</p>
-          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, margin: "4px 0 28px" }}>Açaí</h1>
+          <p style={{ letterSpacing: "0.18em", fontSize: 11, color: "#e7c4ef", margin: 0 }}>RR</p>
+          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, margin: "4px 0 28px", color: "var(--on-sidebar)" }}>Açaí</h1>
         </Link>
-        <nav style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {nav.map((l) => {
             const active = l.href === "/" ? path === "/" : path === l.href || path.startsWith(`${l.href}/`);
             return (
               <Link
                 key={l.href}
                 href={l.href}
-                className={active ? "neo-press" : undefined}
                 style={{
                   padding: "10px 14px",
-                  borderRadius: 14,
-                  background: active ? "var(--bg)" : "var(--card)",
+                  borderRadius: 12,
+                  background: active ? "rgba(248, 241, 234, 0.16)" : "transparent",
                   fontWeight: active ? 700 : 500,
-                  color: active ? "var(--purple)" : "var(--ink)",
-                  boxShadow: active
-                    ? "inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--light)"
-                    : "5px 5px 10px var(--dark), -5px -5px 10px var(--light)",
+                  color: "var(--on-sidebar)",
                 }}
               >
                 {l.label}
@@ -81,9 +78,9 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
         </nav>
         {user && (
           <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-            <p style={{ margin: 0, fontSize: 13, color: "var(--muted)" }}>{user.nome}</p>
+            <p style={{ margin: 0, fontSize: 13, color: "#e7c4ef" }}>{user.nome}</p>
             <form action={sair}>
-              <button type="submit" style={{ width: "100%", padding: "10px 14px" }}>
+              <button type="submit" className="neo-sair" style={{ width: "100%", padding: "10px 14px" }}>
                 Sair
               </button>
             </form>

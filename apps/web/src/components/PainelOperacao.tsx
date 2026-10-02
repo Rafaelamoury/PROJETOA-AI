@@ -60,14 +60,14 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
         <span
           style={{
             display: "inline",
-            background: "#c9b0d4",
-            color: "#2a1638",
+            background: "#f3e4f6",
+            color: "#3f184c",
             fontFamily: "Georgia, serif",
             fontSize: 20,
             lineHeight: 1.7,
             padding: "6px 12px",
             borderRadius: 12,
-            boxShadow: "4px 4px 8px var(--dark), -4px -4px 8px var(--light)",
+            boxShadow: "none",
             boxDecorationBreak: "clone",
             WebkitBoxDecorationBreak: "clone",
           }}
@@ -84,7 +84,7 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
               key={m.mes}
               type="button"
               onClick={() => ir(data.ano, m.mes)}
-              className={ativo ? "neo-press" : undefined}
+              className={ativo ? "neo-press" : "neo-mes"}
               style={{
                 borderRadius: 999,
                 padding: "8px 12px",

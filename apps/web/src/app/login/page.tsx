@@ -17,7 +17,7 @@ export default async function LoginPage({
           padding: 32,
           display: "grid",
           gap: 12,
-          boxShadow: "10px 10px 20px var(--dark), -10px -10px 20px var(--light)",
+          boxShadow: "var(--shadow)",
         }}
       >
         <p style={{ letterSpacing: "0.16em", fontSize: 11, color: "var(--purple)", margin: 0 }}>RR AÇAÍ</p>

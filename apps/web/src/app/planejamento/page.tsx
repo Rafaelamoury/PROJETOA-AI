@@ -76,10 +76,11 @@ export default async function PlanejamentoPage({
               style={{
                 padding: "8px 14px",
                 borderRadius: 14,
-                background: v.id === vista ? "var(--bg)" : "var(--card)",
-                color: v.id === vista ? "var(--purple)" : "var(--ink)",
+                background: v.id === vista ? "var(--purple)" : "var(--card)",
+                color: v.id === vista ? "var(--on-sidebar)" : "var(--ink)",
                 fontWeight: v.id === vista ? 700 : 500,
-                boxShadow: v.id === vista ? "var(--inset)" : "var(--shadow-sm)",
+                boxShadow: "none",
+                border: v.id === vista ? "none" : "1px solid #e4d4c4",
               }}
             >
               {v.label}
