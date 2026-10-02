@@ -6,11 +6,11 @@ import { brl } from "@/lib/api";
 import type { MesOperacao, Painel } from "@/lib/types";
 
 const card: CSSProperties = {
-  background: "var(--bg)",
+  background: "var(--card)",
   border: "none",
   borderRadius: 20,
   padding: 20,
-  boxShadow: "8px 8px 16px #cdc4b8, -8px -8px 16px #f7f3ec",
+  boxShadow: "var(--shadow)",
 };
 
 const COR_RECEITA = "#1f6b45";
@@ -60,14 +60,14 @@ export function PainelOperacao({ data, frase }: { data: Painel; frase: string })
         <span
           style={{
             display: "inline",
-            background: "#ddd4e4",
-            color: "#3d2848",
+            background: "#c9b0d4",
+            color: "#2a1638",
             fontFamily: "Georgia, serif",
             fontSize: 20,
             lineHeight: 1.7,
             padding: "6px 12px",
             borderRadius: 12,
-            boxShadow: "4px 4px 8px #cdc4b8, -4px -4px 8px #f7f3ec",
+            boxShadow: "4px 4px 8px var(--dark), -4px -4px 8px var(--light)",
             boxDecorationBreak: "clone",
             WebkitBoxDecorationBreak: "clone",
           }}

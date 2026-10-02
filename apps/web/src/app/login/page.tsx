@@ -12,7 +12,7 @@ export default async function LoginPage({
         action={entrar}
         style={{
           width: 380,
-          background: "var(--bg)",
+          background: "var(--card)",
           borderRadius: 24,
           padding: 32,
           display: "grid",

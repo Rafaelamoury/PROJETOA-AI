@@ -66,7 +66,7 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
                 style={{
                   padding: "10px 14px",
                   borderRadius: 14,
-                  background: "var(--bg)",
+                  background: active ? "var(--bg)" : "var(--card)",
                   fontWeight: active ? 700 : 500,
                   color: active ? "var(--purple)" : "var(--ink)",
                   boxShadow: active

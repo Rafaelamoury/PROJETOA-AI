@@ -1,14 +1,16 @@
 ﻿:root {
-  --bg: #e6dfd4;
-  --ink: #3a322b;
-  --muted: #6f655c;
-  --purple: #5c4570;
-  --green: #2f6b4f;
-  --light: #f7f3ec;
-  --dark: #cdc4b8;
-  --shadow: 8px 8px 16px var(--dark), -8px -8px 16px var(--light);
-  --shadow-sm: 5px 5px 10px var(--dark), -5px -5px 10px var(--light);
-  --inset: inset 4px 4px 8px var(--dark), inset -4px -4px 8px var(--light);
+  --bg: #cbbfac;
+  --card: #e7dccf;
+  --ink: #1a1410;
+  --muted: #4a4038;
+  --purple: #3c2154;
+  --green: #165438;
+  --light: #f8f3ec;
+  --dark: #7f6f5e;
+  --line: #b5a492;
+  --shadow: 8px 8px 16px var(--dark), -6px -6px 14px var(--light);
+  --shadow-sm: 5px 5px 10px var(--dark), -4px -4px 10px var(--light);
+  --inset: inset 4px 4px 8px var(--dark), inset -3px -3px 7px var(--light);
 }
 
 * { box-sizing: border-box; }
@@ -24,7 +26,7 @@ a { color: inherit; text-decoration: none; }
 
 input, select, textarea, button {
   font: inherit;
-  background: var(--bg) !important;
+  background: var(--card) !important;
   color: var(--ink) !important;
   border: none !important;
   border-radius: 14px !important;
@@ -32,6 +34,7 @@ input, select, textarea, button {
 }
 
 input, select, textarea {
+  background: var(--bg) !important;
   box-shadow: var(--inset) !important;
   padding: 10px 12px;
 }
@@ -51,7 +54,7 @@ button.neo-texto, button.neo-texto:active {
 }
 
 table {
-  background: var(--bg) !important;
+  background: var(--card) !important;
   border-radius: 16px;
   box-shadow: var(--shadow);
   border-collapse: separate !important;
@@ -67,10 +70,19 @@ th, td {
   overflow: visible;
 }
 
-th { color: var(--purple); }
+th {
+  color: var(--purple);
+  font-weight: 700;
+  background: #d9cdb8;
+  border-bottom: 2px solid var(--line);
+}
+
+td { border-bottom: 1px solid var(--line); }
+
+tr:last-child td { border-bottom: none; }
 
 fieldset {
-  background: var(--bg);
+  background: var(--card);
   border: none !important;
   border-radius: 20px;
   box-shadow: var(--shadow-sm);
@@ -80,9 +92,11 @@ main div[style*="border-radius: 16px"],
 main div[style*="border-radius:16px"],
 main div[style*="border-radius: 10px"],
 main div[style*="border-radius:10px"],
+main div[style*="border-radius: 20px"],
+main div[style*="border-radius:20px"],
 main section[style*="border-radius: 16px"],
 main section[style*="border-radius:16px"] {
-  background: var(--bg) !important;
+  background: var(--card) !important;
   border: none !important;
   box-shadow: var(--shadow) !important;
 }
