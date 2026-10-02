@@ -16,7 +16,7 @@ export default function ComoUsarPage() {
 
       <Bloco n="2" titulo="Ordem do dia a dia">
         Cadastre preços em <strong>Mão de obra</strong> e <strong>Produtos</strong>. Informe as plantas em{" "}
-        <strong>Plantas</strong>. Aí lance o mês em <strong>Produção</strong> e os gastos em <strong>Custos</strong>. O{" "}
+        <strong>Plantas</strong>. A adubação usa esses pés e o preço do produto. Aí lance o mês em <strong>Produção</strong> e os gastos em <strong>Custos</strong>. O{" "}
         <strong>Painel</strong> mostra o resultado. O <strong>Caixa</strong> é o dinheiro.
       </Bloco>
 
@@ -59,11 +59,16 @@ export default function ComoUsarPage() {
         palmeiras dobradas e as que têm três. A tabela segue só esse número. O cacho não fica maduro antes do prazo.
       </Bloco>
 
-      <Bloco n="9" titulo="Planejamento">
+      <Bloco n="9" titulo="Adubação">
+        Pequeno, médio e grande têm o próprio adubo. Para cada tamanho, escolha o produto, quanto cada pé recebe no ano
+        e em quantas vezes isso se divide. A aba mostra o que comprar em cada aplicação e o gasto.
+      </Bloco>
+
+      <Bloco n="10" titulo="Planejamento">
         Escolha o ano e se a vista é trimestral, semestral ou anual. Adicione a atividade do terreno naquele período.
       </Bloco>
 
-      <Bloco n="10" titulo="Usuarios (só admin)">
+      <Bloco n="11" titulo="Usuarios (só admin)">
         Nome, CPF e senha da outra pessoa. Quem já existe pode virar administrador pelo botão na lista. Ela precisa sair
         e entrar de novo para o menu aparecer.
       </Bloco>

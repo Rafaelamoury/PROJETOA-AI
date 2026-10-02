@@ -141,11 +141,13 @@ export async function salvarProduto(formData: FormData) {
   if (id) await post(`/produtos/${id}`, "PUT", body);
   else await post("/produtos", "POST", body);
   revalidatePath("/produtos");
+  revalidatePath("/adubacao");
 }
 
 export async function excluirProduto(formData: FormData) {
   await post(`/produtos/${formData.get("id")}`, "DELETE");
   revalidatePath("/produtos");
+  revalidatePath("/adubacao");
 }
 
 export async function salvarProducao(formData: FormData) {
@@ -204,7 +206,25 @@ export async function salvarPlantas(formData: FormData) {
     mesesEntreCachos: Number(formData.get("mesesEntreCachos") || 0),
   });
   revalidatePath("/plantas");
+  revalidatePath("/adubacao");
   revalidatePath("/");
+}
+
+export async function salvarAdubacao(formData: FormData) {
+  const faixa = (nome: string) => {
+    const produto = String(formData.get(`produto${nome}`) || "");
+    return {
+      produtoId: produto ? Number(produto) : null,
+      quantidadePorPlanta: Number(formData.get(`quantidade${nome}`) || 0),
+      aplicacoesNoAno: Number(formData.get(`aplicacoes${nome}`) || 0),
+    };
+  };
+  await post("/adubacao", "PUT", {
+    pequeno: faixa("Pequeno"),
+    medio: faixa("Medio"),
+    grande: faixa("Grande"),
+  });
+  revalidatePath("/adubacao");
 }
 
 export async function criarAtividadePlanejamento(formData: FormData) {

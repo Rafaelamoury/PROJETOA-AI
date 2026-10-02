@@ -87,6 +87,13 @@ public class ProdutosController(AppDbContext db) : ControllerBase
         if (e is null) return NotFound();
         var ligados = await db.Lancamentos.Where(l => l.ProdutoId == id).ToListAsync(ct);
         foreach (var lancamento in ligados) lancamento.ProdutoId = null;
+        var planos = await db.Adubacoes.ToListAsync(ct);
+        foreach (var plano in planos)
+        {
+            if (plano.ProdutoIdPequeno == id) plano.ProdutoIdPequeno = null;
+            if (plano.ProdutoIdMedio == id) plano.ProdutoIdMedio = null;
+            if (plano.ProdutoIdGrande == id) plano.ProdutoIdGrande = null;
+        }
         db.Produtos.Remove(e);
         await db.SaveChangesAsync(ct);
         return NoContent();

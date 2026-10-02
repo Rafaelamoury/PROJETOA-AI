@@ -26,6 +26,9 @@ public static class DbInitializer
             });
         }
 
+        if (!await db.Adubacoes.AnyAsync())
+            db.Adubacoes.Add(new Adubacao());
+
         await db.SaveChangesAsync();
         await SeedAdminAsync(db);
     }

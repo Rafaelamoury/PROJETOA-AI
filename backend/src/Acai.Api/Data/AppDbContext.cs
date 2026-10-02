@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ProducaoMensal> ProducoesMensais => Set<ProducaoMensal>();
     public DbSet<RetiradaCasa> RetiradasCasa => Set<RetiradaCasa>();
     public DbSet<EstoquePlantas> EstoquesPlantas => Set<EstoquePlantas>();
+    public DbSet<Adubacao> Adubacoes => Set<Adubacao>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<AtividadePlanejamento> AtividadesPlanejamento => Set<AtividadePlanejamento>();
 
@@ -42,6 +43,10 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
             .WithMany()
             .HasForeignKey(l => l.ProdutoId)
             .OnDelete(DeleteBehavior.SetNull);
+        modelBuilder.Entity<Adubacao>().ToTable("Adubacoes");
+        modelBuilder.Entity<Adubacao>().Property(x => x.QuantidadePorPlantaPequeno).HasPrecision(18, 2);
+        modelBuilder.Entity<Adubacao>().Property(x => x.QuantidadePorPlantaMedio).HasPrecision(18, 2);
+        modelBuilder.Entity<Adubacao>().Property(x => x.QuantidadePorPlantaGrande).HasPrecision(18, 2);
         modelBuilder.Entity<Usuario>().HasIndex(x => x.Cpf).IsUnique();
         modelBuilder.Entity<AtividadePlanejamento>().ToTable("AtividadesPlanejamento");
     }

@@ -36,6 +36,28 @@ public record ServicoResposta(int Id, string Nome, decimal Valor);
 public record SalvarServico(string Nome, decimal Valor);
 public record ProdutoResposta(int Id, string Nome, decimal Valor, UnidadeProduto Unidade);
 public record SalvarProduto(string Nome, decimal Valor, UnidadeProduto Unidade);
+public record FaixaAdubacao(
+    string Tamanho,
+    int Plantas,
+    int? ProdutoId,
+    string? ProdutoNome,
+    UnidadeProduto? Unidade,
+    decimal? ValorUnitario,
+    decimal QuantidadePorPlanta,
+    int AplicacoesNoAno,
+    decimal TotalAno,
+    decimal PorAplicacao,
+    decimal PorPlantaNaAplicacao,
+    decimal? GastoAplicacao,
+    decimal? GastoAno);
+public record AdubacaoResposta(
+    FaixaAdubacao Pequeno,
+    FaixaAdubacao Medio,
+    FaixaAdubacao Grande,
+    decimal? GastoAplicacao,
+    decimal? GastoAno);
+public record SalvarFaixaAdubacao(int? ProdutoId, decimal QuantidadePorPlanta, int AplicacoesNoAno);
+public record SalvarAdubacao(SalvarFaixaAdubacao Pequeno, SalvarFaixaAdubacao Medio, SalvarFaixaAdubacao Grande);
 public record ProducaoResposta(
     int Id,
     int Ano,

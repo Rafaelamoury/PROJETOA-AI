@@ -68,6 +68,20 @@ public class RetiradaCasa
     public string QuemTirou { get; set; } = string.Empty;
 }
 
+public class Adubacao
+{
+    public int Id { get; set; }
+    public int? ProdutoIdPequeno { get; set; }
+    public decimal QuantidadePorPlantaPequeno { get; set; }
+    public int AplicacoesPequeno { get; set; }
+    public int? ProdutoIdMedio { get; set; }
+    public decimal QuantidadePorPlantaMedio { get; set; }
+    public int AplicacoesMedio { get; set; }
+    public int? ProdutoIdGrande { get; set; }
+    public decimal QuantidadePorPlantaGrande { get; set; }
+    public int AplicacoesGrande { get; set; }
+}
+
 public class EstoquePlantas
 {
     public int Id { get; set; }

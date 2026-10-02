@@ -23,6 +23,30 @@ public static class SchemaPatch
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ValorUnitario TEXT NULL");
         await TryAlter("ALTER TABLE Lancamentos ADD COLUMN ProdutoNome TEXT NULL");
         await TryAlter("ALTER TABLE ProducoesMensais ADD COLUMN Dia INTEGER NOT NULL DEFAULT 1");
+        await TryAlter(
+            """
+            CREATE TABLE IF NOT EXISTS "Adubacoes" (
+                "Id" INTEGER NOT NULL CONSTRAINT "PK_Adubacoes" PRIMARY KEY AUTOINCREMENT,
+                "ProdutoIdPequeno" INTEGER NULL,
+                "QuantidadePorPlantaPequeno" TEXT NOT NULL DEFAULT '0',
+                "AplicacoesPequeno" INTEGER NOT NULL DEFAULT 0,
+                "ProdutoIdMedio" INTEGER NULL,
+                "QuantidadePorPlantaMedio" TEXT NOT NULL DEFAULT '0',
+                "AplicacoesMedio" INTEGER NOT NULL DEFAULT 0,
+                "ProdutoIdGrande" INTEGER NULL,
+                "QuantidadePorPlantaGrande" TEXT NOT NULL DEFAULT '0',
+                "AplicacoesGrande" INTEGER NOT NULL DEFAULT 0
+            );
+            """);
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN ProdutoIdPequeno INTEGER NULL");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN QuantidadePorPlantaPequeno TEXT NOT NULL DEFAULT '0'");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN AplicacoesPequeno INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN ProdutoIdMedio INTEGER NULL");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN QuantidadePorPlantaMedio TEXT NOT NULL DEFAULT '0'");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN AplicacoesMedio INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN ProdutoIdGrande INTEGER NULL");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN QuantidadePorPlantaGrande TEXT NOT NULL DEFAULT '0'");
+        await TryAlter("ALTER TABLE Adubacoes ADD COLUMN AplicacoesGrande INTEGER NOT NULL DEFAULT 0");
         await TryAlter("DROP INDEX IF EXISTS \"IX_ProducoesMensais_Ano_Mes\"");
         await TryAlter("DROP INDEX IF EXISTS \"IX_ProducoesMensais_Ano_Mes_Dia\"");
         await TryAlter(

@@ -97,6 +97,30 @@ export type Lancamento = {
   valorUnitario: number | null;
 };
 
+export type FaixaAdubacao = {
+  tamanho: string;
+  plantas: number;
+  produtoId: number | null;
+  produtoNome: string | null;
+  unidade: "Metro" | "Litro" | "Quilo" | "Unidade" | null;
+  valorUnitario: number | null;
+  quantidadePorPlanta: number;
+  aplicacoesNoAno: number;
+  totalAno: number;
+  porAplicacao: number;
+  porPlantaNaAplicacao: number;
+  gastoAplicacao: number | null;
+  gastoAno: number | null;
+};
+
+export type Adubacao = {
+  pequeno: FaixaAdubacao;
+  medio: FaixaAdubacao;
+  grande: FaixaAdubacao;
+  gastoAplicacao: number | null;
+  gastoAno: number | null;
+};
+
 export type Servico = { id: number; nome: string; valor: number };
 export type Produto = {
   id: number;

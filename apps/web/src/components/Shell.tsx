@@ -14,6 +14,7 @@ const links = [
   { href: "/producao", label: "Producao" },
   { href: "/produtos", label: "Produtos" },
   { href: "/plantas", label: "Plantas" },
+  { href: "/adubacao", label: "Adubação" },
   { href: "/planejamento", label: "Planejamento" },
   { href: "/como-usar", label: "Como usar" },
 ];
