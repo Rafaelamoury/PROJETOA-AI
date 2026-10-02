@@ -52,11 +52,19 @@ button.neo-texto, button.neo-texto:active {
 
 table {
   background: var(--bg) !important;
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: var(--shadow);
   border-collapse: separate !important;
   border-spacing: 0;
-  overflow: hidden;
+  overflow: visible;
+  width: 100%;
+}
+
+th, td {
+  padding: 14px 18px !important;
+  text-align: left;
+  vertical-align: middle;
+  overflow: visible;
 }
 
 th { color: var(--purple); }
