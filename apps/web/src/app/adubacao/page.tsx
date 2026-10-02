@@ -110,12 +110,17 @@ function FaixaForm({
       <div style={{ display: "flex", gap: 16, alignItems: "end", flexWrap: "wrap" }}>
         <label style={campo}>
           Adubo
-          <select name={`produto${nome}`} defaultValue={faixa.produtoId ?? ""} style={inputCampo}>
+          <select
+            key={`${nome}-${faixa.produtoId ?? ""}`}
+            name={`produto${nome}`}
+            defaultValue={faixa.produtoId == null ? "" : String(faixa.produtoId)}
+            style={inputCampo}
+          >
             <option value="">Escolha o adubo</option>
             {produtos.map((p) => {
               const u = unidadeDe(p.unidade);
               return (
-                <option key={p.id} value={p.id}>
+                <option key={`${nome}-${p.id}`} value={String(p.id)}>
                   {p.nome} — {brl(p.valor)} {u.por}
                 </option>
               );
