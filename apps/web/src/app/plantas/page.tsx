@@ -101,7 +101,11 @@ export default async function PlantasPage() {
                       {item.valorMedioLata == null ? "sem produção lançada" : brl(item.valorMedioLata)}
                       {item.valorDaMediaGeral ? " (média geral)" : ""}
                     </td>
-                    <td style={{ padding: 8 }}>{item.faturamento == null ? "—" : faixa(item.faturamento, item.faturamentoMax, brl)}</td>
+                    <td style={{ padding: 8 }}>
+                      {item.faturamento == null || item.faturamentoMax == null
+                        ? "—"
+                        : faixa(item.faturamento, item.faturamentoMax, brl)}
+                    </td>
                   </tr>
                 ))}
               </tbody>
