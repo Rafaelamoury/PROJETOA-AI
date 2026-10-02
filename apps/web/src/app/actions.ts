@@ -105,6 +105,7 @@ export async function criarLancamento(formData: FormData) {
   revalidatePath("/caixa");
   revalidatePath("/custos");
   revalidatePath("/mao-obra");
+  revalidatePath("/produtos");
   revalidatePath("/");
 }
 
@@ -113,6 +114,7 @@ export async function excluirLancamento(formData: FormData) {
   revalidatePath("/caixa");
   revalidatePath("/custos");
   revalidatePath("/mao-obra");
+  revalidatePath("/produtos");
   revalidatePath("/");
 }
 

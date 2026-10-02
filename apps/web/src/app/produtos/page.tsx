@@ -1,5 +1,5 @@
-﻿import { brl, UNIDADES, unidadeDe } from "@/lib/api";
-import type { Produto } from "@/lib/types";
+﻿import { brl, dataIsoBr, UNIDADES, unidadeDe } from "@/lib/api";
+import type { Lancamento, Produto } from "@/lib/types";
 import { excluirProduto, salvarProduto } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
 import { LancarModal, botaoAdicionar, campo, inputCampo } from "@/components/LancarModal";
@@ -7,7 +7,11 @@ import { LancarModal, botaoAdicionar, campo, inputCampo } from "@/components/Lan
 const selectUnidade = { padding: 8, borderRadius: 8, border: "1px solid #e4d9c8" };
 
 export default async function ProdutosPage() {
-  const lista = await apiGet<Produto[]>("/produtos");
+  const [lista, lancamentos] = await Promise.all([
+    apiGet<Produto[]>("/produtos"),
+    apiGet<Lancamento[]>("/lancamentos"),
+  ]);
+  const historico = lancamentos.filter((l) => l.produtoNome);
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
@@ -74,6 +78,47 @@ export default async function ProdutosPage() {
           </div>
         );
       })}
+
+      <h3 style={{ fontFamily: "Georgia, serif", fontSize: 24, margin: "28px 0 8px" }}>Histórico das compras</h3>
+      <p style={{ marginTop: 0 }}>
+        Cada compra lançada em Custos com um produto daqui. O valor é o daquela compra, mesmo que o preço do cadastro
+        mude depois.
+      </p>
+      {historico.length === 0 ? (
+        <p>Nenhuma compra de produto lançada ainda.</p>
+      ) : (
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse", background: "#fffdf8" }}>
+            <thead>
+              <tr style={{ textAlign: "left", borderBottom: "1px solid #e4d9c8" }}>
+                <th style={{ padding: 8 }}>Data</th>
+                <th style={{ padding: 8 }}>Produto</th>
+                <th style={{ padding: 8 }}>Quantidade</th>
+                <th style={{ padding: 8 }}>Valor da unidade</th>
+                <th style={{ padding: 8 }}>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {historico.map((l) => {
+                const unidade = unidadeDe(l.unidade);
+                const qtd =
+                  l.quantidade == null
+                    ? "—"
+                    : `${l.quantidade.toLocaleString("pt-BR", { maximumFractionDigits: 2 })} ${unidade.curto}`;
+                return (
+                  <tr key={l.id} style={{ borderBottom: "1px solid #f0e8da" }}>
+                    <td style={{ padding: 8 }}>{dataIsoBr(l.data)}</td>
+                    <td style={{ padding: 8 }}>{l.produtoNome}</td>
+                    <td style={{ padding: 8 }}>{qtd}</td>
+                    <td style={{ padding: 8 }}>{l.valorUnitario == null ? "—" : brl(l.valorUnitario)}</td>
+                    <td style={{ padding: 8 }}>{brl(l.valor)}</td>
+                  </tr>
+                );
+              })}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
   );
 }

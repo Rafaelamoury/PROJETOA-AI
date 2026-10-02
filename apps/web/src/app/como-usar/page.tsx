@@ -42,7 +42,7 @@ export default function ComoUsarPage() {
         Mão de obra cadastra o serviço e o valor. Produtos cadastra cano, mangueira, veneno, adubo e o que for por
         unidade, com um preço sugerido do metro, litro, quilo ou unidade. A compra é lançada em <strong>Custos</strong>,
         e o valor da unidade pode ser ajustado naquela compra. Alterar o preço do cadastro <strong>não muda</strong> o
-        que já foi lançado antes.
+        que já foi lançado antes. Em Produtos, o histórico lista cada compra, com a data, a quantidade e o valor daquela vez.
       </Bloco>
 
       <Bloco n="7" titulo="Produção">
