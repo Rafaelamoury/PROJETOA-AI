@@ -1,4 +1,4 @@
-﻿import { brl } from "@/lib/api";
+﻿import { brl, dataIsoBr } from "@/lib/api";
 import type { Plantas } from "@/lib/types";
 import { salvarPlantas } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
@@ -58,8 +58,10 @@ export default async function PlantasPage() {
             Cachos para dar 1 lata
             <input type="number" min={0} name="cachosPorLata" defaultValue={p.cachosPorLata || ""} required style={inputCampo} />
           </label>
-          <input type="hidden" name="mesesParaMadurar" value={p.mesesParaMadurar || 0} />
-          <input type="hidden" name="mesesEntreCachos" value={p.mesesEntreCachos || 0} />
+          <label style={campo}>
+            Valor da lata na previsão
+            <input type="number" min={0} step="0.01" name="valorLataPrevisao" defaultValue={p.valorLataPrevisao || ""} style={inputCampo} />
+          </label>
           <button type="submit" style={{ background: "#1f6b45", color: "white", border: 0, borderRadius: 8, padding: "10px 16px" }}>
             Salvar
           </button>
@@ -69,13 +71,16 @@ export default async function PlantasPage() {
       {pronto ? (
         <>
           <p>
-            A tabela parte de <strong>{fmt(p.quantidadeJaProduzem)}</strong> açaizeiras que já produzem. Médio e grande
-            não entram nessa conta.
+            A previsão usa <strong>{fmt(p.quantidadeJaProduzem)}</strong> em Já produzem. A adubação usa os{" "}
+            <strong>{fmt(p.total)}</strong> pés de pequeno, médio e grande, contados como uma unidade cada.
           </p>
           <p>
-            A Embrapa descreve de <strong>6 a 8 cachos por açaizeira no ano</strong>. O trimestre leva um quarto desse
-            ano, o semestre a metade, os nove meses três quartos e o ano o total. Uma lata sai de{" "}
-            <strong>{p.cachosPorLata} {p.cachosPorLata === 1 ? "cacho" : "cachos"}</strong>.
+            A Embrapa descreve de <strong>6 a 8 cachos por açaizeira no ano</strong>.{" "}
+            {p.repartoPelaSafra
+              ? "Essa parte do ano segue os meses em que o sítio já tirou mais açaí."
+              : "Ainda há pouca safra lançada, então o ano se reparte em partes iguais."}{" "}
+            Uma lata sai de <strong>{p.cachosPorLata} {p.cachosPorLata === 1 ? "cacho" : "cachos"}</strong>. O valor da
+            lata é {p.fontePreco === "informado" ? "o que você informou" : p.fontePreco === "ultima" ? "o da última produção lançada" : "ainda sem produção lançada"}.
           </p>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", background: "#fffdf8" }}>
@@ -83,8 +88,9 @@ export default async function PlantasPage() {
                 <tr style={{ textAlign: "left", borderBottom: "1px solid #e4d9c8" }}>
                   <th style={{ padding: 8 }}>Período</th>
                   <th style={{ padding: 8 }}>Cachos no período</th>
-                  <th style={{ padding: 8 }}>Latas</th>
-                  <th style={{ padding: 8 }}>Valor médio da lata</th>
+                  <th style={{ padding: 8 }}>Latas previstas</th>
+                  <th style={{ padding: 8 }}>Já tiradas</th>
+                  <th style={{ padding: 8 }}>Valor da lata</th>
                   <th style={{ padding: 8 }}>Faturamento</th>
                 </tr>
               </thead>
@@ -93,13 +99,13 @@ export default async function PlantasPage() {
                   <tr key={item.meses} style={{ borderBottom: "1px solid #f0e8da" }}>
                     <td style={{ padding: 8 }}>
                       {item.periodo}
-                      <span style={{ opacity: 0.65 }}> · {item.meses} meses</span>
+                      <span style={{ opacity: 0.65 }}> · {item.meses} meses · {fmt(item.parteDoAno * 100)}% do ano</span>
                     </td>
                     <td style={{ padding: 8 }}>{faixa(item.cachos, item.cachosMax)}</td>
                     <td style={{ padding: 8 }}>{faixa(item.latas, item.latasMax)}</td>
+                    <td style={{ padding: 8 }}>{fmt(item.latasTiradas)}</td>
                     <td style={{ padding: 8 }}>
                       {item.valorMedioLata == null ? "sem produção lançada" : brl(item.valorMedioLata)}
-                      {item.valorDaMediaGeral ? " (média geral)" : ""}
                     </td>
                     <td style={{ padding: 8 }}>
                       {item.faturamento == null || item.faturamentoMax == null
@@ -112,9 +118,36 @@ export default async function PlantasPage() {
             </table>
           </div>
           <p style={{ color: "#5c4a32" }}>
-            O faturamento é a quantidade de latas vezes o valor médio da lata nas produções já lançadas naquele
-            período.
+            Latas previstas olham para a frente, na parte do ano indicada. Já tiradas são a produção mais a casa nos
+            últimos meses desse prazo. A casa não entra no caixa. O faturamento usa o valor da lata da previsão.
           </p>
+          {(p.historico ?? []).length > 0 ? (
+            <>
+              <h3 style={{ fontFamily: "Georgia, serif", fontSize: 22 }}>Contagens guardadas</h3>
+              <table style={{ width: "100%", borderCollapse: "collapse", background: "#fffdf8" }}>
+                <thead>
+                  <tr>
+                    <th style={{ padding: 8 }}>Data</th>
+                    <th style={{ padding: 8 }}>Pequeno</th>
+                    <th style={{ padding: 8 }}>Médio</th>
+                    <th style={{ padding: 8 }}>Grande</th>
+                    <th style={{ padding: 8 }}>Já produzem</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {p.historico.map((c, i) => (
+                    <tr key={`${c.data}-${i}`}>
+                      <td style={{ padding: 8 }}>{dataIsoBr(c.data)}</td>
+                      <td style={{ padding: 8 }}>{fmt(c.pequeno)}</td>
+                      <td style={{ padding: 8 }}>{fmt(c.medio)}</td>
+                      <td style={{ padding: 8 }}>{fmt(c.grande)}</td>
+                      <td style={{ padding: 8 }}>{fmt(c.jaProduzem)}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </>
+          ) : null}
         </>
       ) : (
         <p>

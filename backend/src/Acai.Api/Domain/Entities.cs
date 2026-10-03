@@ -94,6 +94,17 @@ public class EstoquePlantas
     public int PalmeirasPorPe { get; set; } = 2;
     public int PesComTresPalmeiras { get; set; }
     public int MesesEntreCachos { get; set; } = 2;
+    public decimal? ValorLataPrevisao { get; set; }
+}
+
+public class ContagemPlantas
+{
+    public int Id { get; set; }
+    public DateOnly Data { get; set; }
+    public int Pequeno { get; set; }
+    public int Medio { get; set; }
+    public int Grande { get; set; }
+    public int JaProduzem { get; set; }
 }
 
 public class Usuario

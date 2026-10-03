@@ -200,10 +200,11 @@ export async function salvarPlantas(formData: FormData) {
     quantidadeGrande: Number(formData.get("quantidadeGrande")),
     quantidadeJaProduzem: Number(formData.get("quantidadeJaProduzem")),
     cachosPorLata: Number(formData.get("cachosPorLata") || 0),
-    mesesParaMadurar: Number(formData.get("mesesParaMadurar") || 0),
-    palmeirasPorPe: Number(formData.get("palmeirasPorPe") || 0),
-    pesComTresPalmeiras: Number(formData.get("pesComTresPalmeiras") || 0),
-    mesesEntreCachos: Number(formData.get("mesesEntreCachos") || 0),
+    mesesParaMadurar: 0,
+    palmeirasPorPe: 0,
+    pesComTresPalmeiras: 0,
+    mesesEntreCachos: 0,
+    valorLataPrevisao: Number(formData.get("valorLataPrevisao") || 0) || null,
   });
   revalidatePath("/plantas");
   revalidatePath("/adubacao");

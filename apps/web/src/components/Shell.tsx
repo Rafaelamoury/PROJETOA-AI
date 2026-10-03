@@ -1,8 +1,7 @@
 ﻿"use client";
 
 import Link from "next/link";
-import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef } from "react";
+import { usePathname } from "next/navigation";
 import { sair } from "@/app/actions";
 import type { Sessao } from "@/lib/server-api";
 
@@ -10,8 +9,8 @@ const links = [
   { href: "/", label: "Painel" },
   { href: "/caixa", label: "Caixa" },
   { href: "/custos", label: "Custos" },
-  { href: "/mao-obra", label: "Mao de obra" },
-  { href: "/producao", label: "Producao" },
+  { href: "/mao-obra", label: "Mão de obra" },
+  { href: "/producao", label: "Produção" },
   { href: "/produtos", label: "Produtos" },
   { href: "/plantas", label: "Plantas" },
   { href: "/adubacao", label: "Adubação" },
@@ -19,23 +18,12 @@ const links = [
   { href: "/como-usar", label: "Como usar" },
 ];
 
-export function Shell({ children, user }: { children: React.ReactNode; user: Sessao | null }) {
+export function Shell({ children, user, contaDefasada }: { children: React.ReactNode; user: Sessao | null; contaDefasada?: boolean }) {
   const path = usePathname();
-  const router = useRouter();
-  const decidiuAbertura = useRef(false);
-
-  useEffect(() => {
-    if (decidiuAbertura.current) return;
-    decidiuAbertura.current = true;
-    if (path === "/login" || path === "/") return;
-    const abertura = performance.getEntriesByType("navigation")[0] as PerformanceNavigationTiming | undefined;
-    if (abertura?.type === "reload") return;
-    router.replace("/");
-  }, [path, router]);
 
   if (path === "/login") return <>{children}</>;
 
-  const nav = user?.isAdmin ? [...links, { href: "/usuarios", label: "Usuarios" }] : links;
+  const nav = user?.isAdmin ? [...links, { href: "/usuarios", label: "Usuários" }] : links;
 
   return (
     <div style={{ display: "grid", gridTemplateColumns: "240px 1fr", minHeight: "100vh", background: "var(--bg)", color: "var(--ink)" }}>
@@ -88,7 +76,14 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
           </div>
         )}
       </aside>
-      <main style={{ padding: "32px 40px", maxWidth: 1240 }}>{children}</main>
+      <main style={{ padding: "32px 40px", maxWidth: 1240 }}>
+        {contaDefasada ? (
+          <p style={{ margin: "0 0 16px", color: "var(--purple)", fontWeight: 700 }}>
+            A tela e a conta do sítio estão em versões diferentes. Atualize daqui a pouco.
+          </p>
+        ) : null}
+        {children}
+      </main>
     </div>
   );
 }

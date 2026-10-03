@@ -27,7 +27,7 @@ export default function ComoUsarPage() {
 
       <Bloco n="4" titulo="Caixa">
         Saldo único. Coloque o saldo inicial uma vez. <strong>+ Lançar entrada</strong> é dinheiro que entra (aporte,
-        venda extra). Gastos não se lançam aqui — vão em Custos. Produção já mexe no caixa sozinha.
+        venda extra). Gastos não se lançam aqui — vão em Custos. Produção já mexe no caixa sozinha. Baixar cópia guarda a lista neste computador.
       </Bloco>
 
       <Bloco n="5" titulo="Custos">
@@ -50,19 +50,18 @@ export default function ComoUsarPage() {
         Informe o dia em que o açaí foi tirado, a quantidade de latas, o valor da lata e o custo de cada lata. O total
         gasto é a quantidade vezes esse custo. O caixa recebe o valor e o custo nessa data. Pode lançar quantas
         produções quiser no mesmo dia. Errou algum dado? Use alterar na linha: o caixa acompanha. Excluir apaga só aquela linha.
-        <strong> Casa</strong> é o açaí tirado para beber em casa: quantidade, dia, mês e quem tirou. Esse lançamento
-        não entra no caixa.
+        <strong> Casa</strong> é o açaí da colheita levado para casa: entra no total tirado do mês e não entra no caixa.
       </Bloco>
 
       <Bloco n="8" titulo="Plantas">
         Médio e grande entram como uma unidade cada. Em Já produzem você informa o número já com a sua conta, com as
-        palmeiras dobradas e as que têm três. A tabela segue só esse número. Cada açaizeira entra com 6 a 8 cachos no
-        ano, e esse total se divide em trimestre, semestre, nove meses e ano.
+        palmeiras dobradas e as que têm três. A adubação usa pequeno, médio e grande. A tabela de latas segue só Já
+        produzem, com 6 a 8 cachos no ano, repartidos pela safra já lançada. Ao lado, aparecem as latas já tiradas.
       </Bloco>
 
       <Bloco n="9" titulo="Adubação">
         Pequeno, médio e grande têm o próprio adubo. Para cada tamanho, escolha o produto, quanto cada pé recebe no ano
-        e em quantas vezes isso se divide. A aba mostra o que comprar em cada aplicação e o gasto.
+        e em quantas vezes isso se divide. A aba mostra o que comprar, o que já foi comprado e o gasto. Ela não lança compra no caixa.
       </Bloco>
 
       <Bloco n="10" titulo="Planejamento">

@@ -12,8 +12,10 @@ namespace Acai.Api.Controllers;
 [Route("api/health")]
 public class HealthController : ControllerBase
 {
+    public const string Versao = "2026.10.03";
+
     [HttpGet]
-    public IActionResult Get() => Ok(new { status = "ok", servico = "Acai.Api" });
+    public IActionResult Get() => Ok(new { status = "ok", servico = "Acai.Api", versao = Versao });
 }
 
 [ApiController]

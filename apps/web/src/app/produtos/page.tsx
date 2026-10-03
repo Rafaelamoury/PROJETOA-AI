@@ -64,7 +64,16 @@ export default async function ProdutosPage() {
                 ))}
               </select>
               <input name="valor" type="number" step="0.01" min={0} defaultValue={p.valor} required style={{ width: 120, padding: 8 }} />
-              <span style={{ alignSelf: "center", fontSize: 13, opacity: 0.75 }}>{brl(p.valor)} {unidade.por}</span>
+              <span style={{ alignSelf: "center", fontSize: 13, opacity: 0.75 }}>
+                {brl(p.valor)} {unidade.por}
+                {" · "}
+                comprado{" "}
+                {historico
+                  .filter((l) => l.produtoId === p.id)
+                  .reduce((s, l) => s + (l.quantidade ?? 0), 0)
+                  .toLocaleString("pt-BR", { maximumFractionDigits: 2 })}{" "}
+                {unidade.curto}
+              </span>
               <button type="submit" style={{ background: "#4a1c6b", color: "white", border: 0, borderRadius: 8, padding: "8px 12px" }}>
                 Alterar
               </button>
@@ -82,7 +91,7 @@ export default async function ProdutosPage() {
       <h3 style={{ fontFamily: "Georgia, serif", fontSize: 24, margin: "28px 0 8px" }}>Histórico das compras</h3>
       <p style={{ marginTop: 0 }}>
         Cada compra lançada em Custos com um produto daqui. O valor é o daquela compra, mesmo que o preço do cadastro
-        mude depois.
+        mude depois. O comprado ao lado do produto é a soma dessas quantidades, não o que ainda está no galpão.
       </p>
       {historico.length === 0 ? (
         <p>Nenhuma compra de produto lançada ainda.</p>

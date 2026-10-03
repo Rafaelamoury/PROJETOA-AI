@@ -12,6 +12,7 @@ public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(op
     public DbSet<ProducaoMensal> ProducoesMensais => Set<ProducaoMensal>();
     public DbSet<RetiradaCasa> RetiradasCasa => Set<RetiradaCasa>();
     public DbSet<EstoquePlantas> EstoquesPlantas => Set<EstoquePlantas>();
+    public DbSet<ContagemPlantas> ContagensPlantas => Set<ContagemPlantas>();
     public DbSet<Adubacao> Adubacoes => Set<Adubacao>();
     public DbSet<Usuario> Usuarios => Set<Usuario>();
     public DbSet<AtividadePlanejamento> AtividadesPlanejamento => Set<AtividadePlanejamento>();

@@ -107,15 +107,28 @@ public class PlantasController(AppDbContext db) : ControllerBase
             return BadRequest(new { erro = "Os numeros da conta nao podem ser negativos." });
 
         var e = await db.EstoquesPlantas.FirstAsync(ct);
+        var mudou = e.QuantidadePequeno != body.QuantidadePequeno
+            || e.QuantidadeMedio != body.QuantidadeMedio
+            || e.QuantidadeGrande != body.QuantidadeGrande
+            || e.QuantidadeJaProduzem != body.QuantidadeJaProduzem;
         e.QuantidadePequeno = body.QuantidadePequeno;
         e.QuantidadeMedio = body.QuantidadeMedio;
         e.QuantidadeGrande = body.QuantidadeGrande;
         e.QuantidadeJaProduzem = body.QuantidadeJaProduzem;
+        var semHistoria = !await db.ContagensPlantas.AnyAsync(ct);
         e.CachosPorLata = body.CachosPorLata;
-        e.MesesParaMadurar = body.MesesParaMadurar;
-        e.PalmeirasPorPe = body.PalmeirasPorPe;
-        e.PesComTresPalmeiras = body.PesComTresPalmeiras;
-        e.MesesEntreCachos = body.MesesEntreCachos;
+        e.ValorLataPrevisao = body.ValorLataPrevisao is > 0 ? body.ValorLataPrevisao : null;
+        if (mudou || semHistoria)
+        {
+            db.ContagensPlantas.Add(new ContagemPlantas
+            {
+                Data = DateOnly.FromDateTime(DateTime.Today),
+                Pequeno = body.QuantidadePequeno,
+                Medio = body.QuantidadeMedio,
+                Grande = body.QuantidadeGrande,
+                JaProduzem = body.QuantidadeJaProduzem
+            });
+        }
         await db.SaveChangesAsync(ct);
         return await Montar(e, ct);
     }
@@ -123,8 +136,18 @@ public class PlantasController(AppDbContext db) : ControllerBase
     private async Task<PlantasResposta> Montar(EstoquePlantas e, CancellationToken ct)
     {
         var producoes = await db.ProducoesMensais.AsNoTracking().ToListAsync(ct);
+        var casas = await db.RetiradasCasa.AsNoTracking().ToListAsync(ct);
+        var historico = await db.ContagensPlantas.AsNoTracking()
+            .OrderByDescending(c => c.Data).ThenByDescending(c => c.Id)
+            .Take(12)
+            .ToListAsync(ct);
         var hoje = DateOnly.FromDateTime(DateTime.Today);
-        var previsoes = Horizontes.Select(h => Prever(e, producoes, hoje, h.Meses, h.Periodo)).ToList();
+        var pesos = PesosDaSafra(producoes, casas);
+        var reparto = pesos.Count(p => p > 0) >= 3 && pesos.Distinct().Count() > 1;
+        var ultima = producoes.OrderByDescending(Data).ThenByDescending(p => p.Id).FirstOrDefault();
+        var preco = e.ValorLataPrevisao is > 0 ? e.ValorLataPrevisao : ultima?.ValorLata;
+        var fonte = e.ValorLataPrevisao is > 0 ? "informado" : ultima is null ? "sem" : "ultima";
+        var previsoes = Horizontes.Select(h => Prever(e, producoes, casas, pesos, hoje, preco, h.Meses, h.Periodo)).ToList();
         return new(
             e.QuantidadePequeno,
             e.QuantidadeMedio,
@@ -137,35 +160,68 @@ public class PlantasController(AppDbContext db) : ControllerBase
             e.PesComTresPalmeiras,
             e.MesesEntreCachos,
             Math.Max(0, e.QuantidadeJaProduzem),
-            previsoes);
+            previsoes,
+            reparto,
+            e.ValorLataPrevisao,
+            fonte,
+            historico.Select(c => new ContagemPlantasResposta(c.Data, c.Pequeno, c.Medio, c.Grande, c.JaProduzem)).ToList());
     }
 
     private static PrevisaoPlantio Prever(
         EstoquePlantas e,
         IReadOnlyList<ProducaoMensal> producoes,
+        IReadOnlyList<RetiradaCasa> casas,
+        decimal[] pesos,
         DateOnly hoje,
+        decimal? preco,
         int meses,
         string periodo)
     {
+        var parte = Parte(pesos, hoje, meses);
         var plantas = Math.Max(0, e.QuantidadeJaProduzem);
-        var baixa = DoAno(plantas, 6, meses, e.CachosPorLata);
-        var alta = DoAno(plantas, 8, meses, e.CachosPorLata);
+        var baixa = DoAno(plantas, 6, parte, e.CachosPorLata);
+        var alta = DoAno(plantas, 8, parte, e.CachosPorLata);
         var inicio = hoje.AddMonths(-meses);
-        var noPeriodo = producoes.Where(p => Data(p) >= inicio && Data(p) <= hoje).ToList();
-        var doPeriodo = Media(noPeriodo);
-        var geral = Media(producoes);
-        var valor = doPeriodo ?? geral;
-        var preco = valor is null ? (decimal?)null : Math.Round(valor.Value, 2);
-        var faturamento = preco is null ? (decimal?)null : Math.Round(baixa.LatasExatas * preco.Value, 2);
-        var faturamentoMax = preco is null ? (decimal?)null : Math.Round(alta.LatasExatas * preco.Value, 2);
-        return new(meses, periodo, baixa.Cachos, baixa.Latas, preco, faturamento, doPeriodo is null && geral is not null, alta.Cachos, alta.Latas, faturamentoMax);
+        var tiradas = producoes.Where(p => Data(p) >= inicio && Data(p) <= hoje).Sum(p => p.QuantidadeLatas)
+            + casas.Where(c => DataCasa(c) >= inicio && DataCasa(c) <= hoje).Sum(c => c.Quantidade);
+        var precoRedondo = preco is null ? (decimal?)null : Math.Round(preco.Value, 2);
+        var faturamento = precoRedondo is null ? (decimal?)null : Math.Round(baixa.LatasExatas * precoRedondo.Value, 2);
+        var faturamentoMax = precoRedondo is null ? (decimal?)null : Math.Round(alta.LatasExatas * precoRedondo.Value, 2);
+        return new(meses, periodo, baixa.Cachos, baixa.Latas, precoRedondo, faturamento, false, alta.Cachos, alta.Latas, faturamentoMax, Math.Round(tiradas, 2), Math.Round(parte, 4));
     }
 
-    private static (decimal Cachos, decimal Latas, decimal LatasExatas) DoAno(int plantas, int cachosPorPalmeiraNoAno, int meses, int cachosPorLata)
+    private static (decimal Cachos, decimal Latas, decimal LatasExatas) DoAno(int plantas, int cachosPorPalmeiraNoAno, decimal parte, int cachosPorLata)
     {
-        var cachosExatos = plantas * cachosPorPalmeiraNoAno * meses / 12m;
+        var cachosExatos = plantas * cachosPorPalmeiraNoAno * parte;
         var latasExatas = cachosPorLata > 0 ? cachosExatos / cachosPorLata : 0m;
         return (Math.Round(cachosExatos, 2), Math.Round(latasExatas, 2), latasExatas);
+    }
+
+    private static decimal[] PesosDaSafra(IReadOnlyList<ProducaoMensal> producoes, IReadOnlyList<RetiradaCasa> casas)
+    {
+        var bruto = new decimal[12];
+        foreach (var p in producoes) bruto[p.Mes - 1] += p.QuantidadeLatas;
+        foreach (var c in casas) bruto[c.Mes - 1] += c.Quantidade;
+        var mesesCom = bruto.Count(x => x > 0);
+        if (mesesCom < 3)
+            return Enumerable.Repeat(1m / 12m, 12).ToArray();
+        var soma = bruto.Sum();
+        return bruto.Select(x => soma == 0 ? 1m / 12m : x / soma).ToArray();
+    }
+
+    private static decimal Parte(decimal[] pesos, DateOnly hoje, int meses)
+    {
+        if (meses >= 12) return 1m;
+        decimal soma = 0;
+        for (var i = 0; i < meses; i++)
+            soma += pesos[(hoje.Month - 1 + i) % 12];
+        return soma;
+    }
+
+    private static DateOnly DataCasa(RetiradaCasa c)
+    {
+        var dia = Math.Clamp(c.Dia, 1, DateTime.DaysInMonth(c.Ano, c.Mes));
+        return new DateOnly(c.Ano, c.Mes, dia);
     }
 
     private static DateOnly Data(ProducaoMensal p)
@@ -174,10 +230,4 @@ public class PlantasController(AppDbContext db) : ControllerBase
         return new DateOnly(p.Ano, p.Mes, dia);
     }
 
-    private static decimal? Media(IReadOnlyList<ProducaoMensal> itens)
-    {
-        var quantidade = itens.Sum(p => p.QuantidadeLatas);
-        if (quantidade <= 0) return null;
-        return itens.Sum(p => p.QuantidadeLatas * p.ValorLata) / quantidade;
-    }
 }

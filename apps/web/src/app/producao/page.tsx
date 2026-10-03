@@ -1,5 +1,5 @@
 ﻿import { brl, dataBr, nomeMes } from "@/lib/api";
-import type { Producao, RetiradaCasa } from "@/lib/types";
+import type { Lancamento, Producao, RetiradaCasa } from "@/lib/types";
 import { excluirCasa, excluirProducao } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
 import { FormProducao } from "@/components/FormProducao";
@@ -21,9 +21,10 @@ export default async function ProducaoPage({
   const ano = anoPedido >= 2000 && anoPedido <= 2100 ? anoPedido : anoAtual;
   const mes = mesPedido >= 1 && mesPedido <= 12 ? mesPedido : mesAtual;
 
-  const [lista, casas] = await Promise.all([
+  const [lista, casas, lancamentos] = await Promise.all([
     apiGet<Producao[]>("/producoes"),
     apiGet<RetiradaCasa[]>("/casa"),
+    apiGet<Lancamento[]>("/lancamentos"),
   ]);
 
   const anosComDado = [...lista.map((p) => p.ano), ...casas.map((c) => c.ano), ano];
@@ -45,12 +46,21 @@ export default async function ProducaoPage({
   const totalLatas = doMes.reduce((s, p) => s + p.quantidadeLatas, 0);
   const totalLiquido = doMes.reduce((s, p) => s + (p.valorLiquido ?? p.valorProducao), 0);
   const totalCasa = casaMes.reduce((s, c) => s + c.quantidade, 0);
+  const doMesCaixa = lancamentos.filter((l) => {
+    const data = new Date(`${l.data}T00:00:00`);
+    return data.getFullYear() === ano && data.getMonth() + 1 === mes;
+  });
+  const campo = doMesCaixa
+    .filter((l) => l.tipo === "CustoOperacional" && l.producaoMensalId == null)
+    .reduce((s, l) => s + l.valor, 0);
+  const mao = doMesCaixa.filter((l) => l.tipo === "MaoObra").reduce((s, l) => s + l.valor, 0);
+  const lucroOperacao = totalLiquido - campo - mao;
 
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", gap: 16, flexWrap: "wrap" }}>
         <div>
-          <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Producao mensal</h2>
+          <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Produção mensal</h2>
           <p>
             Escolha o ano e o mês para ver os lançamentos daquele período. Os doze meses ficam no filtro. Informe o
             custo de cada lata: o total gasto e a quantidade vezes esse valor e sai do caixa no mesmo dia, junto com a
@@ -68,7 +78,7 @@ export default async function ProducaoPage({
           <LancarModal
             titulo="Casa"
             botao="+ Lançar casa"
-            dica="Açaí tirado para beber em casa. Não entra no caixa: fica o dia, o mês, a quantidade e quem tirou."
+            dica="Açaí da colheita levado para casa. Entra na conta das latas tiradas e não entra no caixa."
           >
             <FormCasa padrao={padrao} nomes={nomes} />
           </LancarModal>
@@ -80,9 +90,20 @@ export default async function ProducaoPage({
       <p style={{ margin: "0 0 18px", color: "#4a1c6b", fontWeight: 700 }}>
         {nomeMes(mes)} de {ano}
         {" · "}
-        {qtd(totalLatas)} latas na produção
+        {qtd(totalLatas + totalCasa)} latas na colheita
         {" · "}
-        {qtd(totalCasa)} latas para casa
+        {qtd(totalLatas)} vendidas
+        {" · "}
+        {qtd(totalCasa)} para casa
+      </p>
+      <p style={{ margin: "-8px 0 18px" }}>
+        Líquido do açaí <strong>{brl(totalLiquido)}</strong>
+        {" · "}
+        lucro da operação <strong>{brl(lucroOperacao)}</strong>
+        <span style={{ opacity: 0.75 }}>
+          {" "}
+          (o líquido desconta só o custo de tirar; o lucro da operação também tira {brl(campo)} de campo e {brl(mao)} de mão de obra)
+        </span>
       </p>
 
       <h3 style={{ fontFamily: "Georgia, serif", margin: "0 0 8px" }}>Produção de {nomeMes(mes)}</h3>
@@ -156,7 +177,7 @@ export default async function ProducaoPage({
 
       <h3 style={{ fontFamily: "Georgia, serif", margin: "8px 0 4px" }}>Casa</h3>
       <p style={{ margin: "0 0 10px", fontSize: 14, opacity: 0.75 }}>
-        Açaí tirado para beber em casa em {nomeMes(mes)} de {ano}. Cada linha guarda a quantidade, o dia e quem tirou.
+        Açaí da colheita levado para casa em {nomeMes(mes)} de {ano}. Entra no total tirado do mês e não entra no caixa.
       </p>
       <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 14 }}>
         <thead>

@@ -3,6 +3,7 @@ import type { Caixa, Lancamento } from "@/lib/types";
 import { atualizarSaldo, criarLancamento, excluirLancamento } from "@/app/actions";
 import { apiGet } from "@/lib/server-api";
 import { LancarModal, botaoAdicionar, campo, inputCampo } from "@/components/LancarModal";
+import { CopiaCaixa } from "@/components/CopiaCaixa";
 
 export default async function CaixaPage() {
   const [caixa, lista] = await Promise.all([apiGet<Caixa>("/caixa"), apiGet<Lancamento[]>("/lancamentos")]);
@@ -14,10 +15,12 @@ export default async function CaixaPage() {
         <div>
           <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Caixa</h2>
           <p>
-            Saldo unico da operacao. Entradas (incluindo acai tirado na producao) somam; custos e extracao saem. Gastos
-            novos se lancam em <strong>Custos</strong>.
+            Saldo único da operação. Entradas, incluindo o açaí tirado na produção, somam. Custos e extração saem.
+            Gastos novos se lançam em <strong>Custos</strong>. Baixar cópia guarda essa lista no seu computador.
           </p>
         </div>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+        <CopiaCaixa linhas={lista} />
         <LancarModal
           titulo="Nova entrada"
           botao="+ Lancar entrada"
@@ -42,6 +45,7 @@ export default async function CaixaPage() {
             </button>
           </form>
         </LancarModal>
+        </div>
       </div>
       <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
         <div style={{ background: "#fffdf8", border: "1px solid #e4d9c8", borderRadius: 16, padding: 20 }}>

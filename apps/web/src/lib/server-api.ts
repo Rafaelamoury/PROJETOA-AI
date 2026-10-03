@@ -19,6 +19,17 @@ export async function apiGet<T>(path: string): Promise<T> {
 
 export type Sessao = { id: number; nome: string; cpf: string; isAdmin: boolean };
 
+export async function versaoDaApi(): Promise<string | null> {
+  try {
+    const res = await fetch(`${API}/health`, { cache: "no-store" });
+    if (!res.ok) return null;
+    const body = (await res.json()) as { versao?: string };
+    return body.versao ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function getSessao(): Promise<Sessao | null> {
   const token = (await cookies()).get("acai_token")?.value;
   if (!token) return null;

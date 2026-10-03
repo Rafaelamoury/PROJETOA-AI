@@ -16,6 +16,16 @@ export type PrevisaoPlantio = {
   cachosMax: number;
   latasMax: number;
   faturamentoMax: number | null;
+  latasTiradas: number;
+  parteDoAno: number;
+};
+
+export type ContagemPlantas = {
+  data: string;
+  pequeno: number;
+  medio: number;
+  grande: number;
+  jaProduzem: number;
 };
 
 export type Plantas = {
@@ -31,6 +41,10 @@ export type Plantas = {
   mesesEntreCachos: number;
   palmeiras: number;
   previsoes: PrevisaoPlantio[];
+  repartoPelaSafra: boolean;
+  valorLataPrevisao: number | null;
+  fontePreco: "informado" | "ultima" | "sem";
+  historico: ContagemPlantas[];
 };
 
 export type Producao = {
