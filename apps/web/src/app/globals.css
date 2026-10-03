@@ -80,9 +80,9 @@ button.neo-secundario, button.neo-secundario:active {
 
 button.neo-sair, button.neo-sair:active {
   background: transparent !important;
-  color: var(--on-sidebar) !important;
+  color: var(--purple) !important;
   box-shadow: none !important;
-  border: 1px solid rgba(248, 241, 234, 0.45) !important;
+  border: 1px solid #e4d4c4 !important;
   font-weight: 600;
 }
 

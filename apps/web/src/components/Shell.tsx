@@ -44,8 +44,9 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
           padding: "28px 18px",
           display: "flex",
           flexDirection: "column",
-          background: "var(--sidebar)",
-          color: "var(--on-sidebar)",
+          background: "var(--bg)",
+          color: "var(--ink)",
+          borderRight: "1px solid var(--line)",
           maxHeight: "100vh",
           overflow: "auto",
           position: "sticky",
@@ -53,8 +54,8 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
         }}
       >
         <Link href="/" style={{ color: "inherit", textDecoration: "none", padding: "8px 12px" }}>
-          <p style={{ letterSpacing: "0.18em", fontSize: 11, color: "#e7c4ef", margin: 0 }}>RR</p>
-          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, margin: "4px 0 28px", color: "var(--on-sidebar)" }}>Açaí</h1>
+          <p style={{ letterSpacing: "0.18em", fontSize: 11, color: "var(--purple)", margin: 0 }}>RR</p>
+          <h1 style={{ fontFamily: "Georgia, serif", fontSize: 28, margin: "4px 0 28px", color: "var(--sidebar)" }}>Açaí</h1>
         </Link>
         <nav style={{ display: "flex", flexDirection: "column", gap: 6 }}>
           {nav.map((l) => {
@@ -66,9 +67,9 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
                 style={{
                   padding: "10px 14px",
                   borderRadius: 12,
-                  background: active ? "rgba(248, 241, 234, 0.16)" : "transparent",
+                  background: active ? "rgba(63, 24, 76, 0.08)" : "transparent",
                   fontWeight: active ? 700 : 500,
-                  color: "var(--on-sidebar)",
+                  color: "var(--sidebar)",
                 }}
               >
                 {l.label}
@@ -78,7 +79,7 @@ export function Shell({ children, user }: { children: React.ReactNode; user: Ses
         </nav>
         {user && (
           <div style={{ marginTop: 16, display: "flex", flexDirection: "column", gap: 8 }}>
-            <p style={{ margin: 0, fontSize: 13, color: "#e7c4ef" }}>{user.nome}</p>
+            <p style={{ margin: 0, fontSize: 13, color: "var(--muted)" }}>{user.nome}</p>
             <form action={sair}>
               <button type="submit" className="neo-sair" style={{ width: "100%", padding: "10px 14px" }}>
                 Sair
