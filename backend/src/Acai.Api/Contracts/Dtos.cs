@@ -103,7 +103,16 @@ public record PlantasResposta(
     bool RepartoPelaSafra,
     decimal? ValorLataPrevisao,
     string FontePreco,
-    IReadOnlyList<ContagemPlantasResposta> Historico);
+    IReadOnlyList<ContagemPlantasResposta> Historico,
+    int CachosPorPalmeiraNoAno,
+    int MesesAteProntoDe,
+    int MesesAteProntoAte,
+    int AnoCorrente,
+    decimal LatasPrevistasNoAno,
+    decimal LatasPrevistasNoAnoMax,
+    decimal LatasAMaisNoAno,
+    string ProntoDe,
+    string ProntoAte);
 public record ContagemPlantasResposta(DateOnly Data, int Pequeno, int Medio, int Grande, int JaProduzem);
 public record SalvarPlantas(
     int QuantidadePequeno,
@@ -115,7 +124,10 @@ public record SalvarPlantas(
     int PalmeirasPorPe,
     int PesComTresPalmeiras,
     int MesesEntreCachos,
-    decimal? ValorLataPrevisao);
+    decimal? ValorLataPrevisao,
+    int CachosPorPalmeiraNoAno,
+    int MesesAteProntoDe,
+    int MesesAteProntoAte);
 public record MesOperacaoResposta(
     int Mes,
     string Nome,

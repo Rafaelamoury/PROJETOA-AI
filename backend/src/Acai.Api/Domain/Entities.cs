@@ -90,6 +90,9 @@ public class EstoquePlantas
     public int QuantidadeGrande { get; set; }
     public int QuantidadeJaProduzem { get; set; }
     public int CachosPorLata { get; set; }
+    public int CachosPorPalmeiraNoAno { get; set; }
+    public int MesesAteProntoDe { get; set; } = 6;
+    public int MesesAteProntoAte { get; set; } = 7;
     public int MesesParaMadurar { get; set; }
     public int PalmeirasPorPe { get; set; } = 2;
     public int PesComTresPalmeiras { get; set; }

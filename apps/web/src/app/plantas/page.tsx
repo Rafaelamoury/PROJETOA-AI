@@ -8,15 +8,18 @@ const card = { background: "#fffdf8", border: "1px solid #e4d9c8", borderRadius:
 
 export default async function PlantasPage() {
   const p = await apiGet<Plantas>("/plantas");
-  const pronto = p.cachosPorLata > 0;
+  const cachosNoAno = p.cachosPorPalmeiraNoAno ?? 0;
+  const pronto = p.cachosPorLata > 0 && cachosNoAno > 0;
+  const ano = p.previsoes?.find((item) => item.meses === 12);
 
   return (
     <div>
       <h2 style={{ fontFamily: "Georgia, serif", fontSize: 32, marginTop: 0 }}>Plantas</h2>
       <p>
-        Médio e grande entram como uma unidade cada, só para contar o plantio. Em Já produzem você coloca o número que
-        já fez a conta: a maior parte com 2 palmeiras juntas e as que têm 3. A tabela usa só esse número. Cada
-        açaizeira entra com 6 a 8 cachos no ano, e esse total se reparte em trimestre, semestre, nove meses e ano.
+        Médio e grande entram como uma unidade cada, só para contar o plantio. A conta do ano cheio usa só{" "}
+        <strong>Já produzem</strong>: esse número vezes os cachos que cada açaizeira dá no ano, dividido pelos cachos de
+        uma lata. Em {p.anoCorrente ?? new Date().getFullYear()} essa conta ainda não começa: o açaí fica pronto daqui
+        aos meses que você informar, e o que entrar antes aparece como a mais.
       </p>
 
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(140px, 1fr))", gap: 12, marginBottom: 24 }}>
@@ -55,8 +58,20 @@ export default async function PlantasPage() {
         </div>
         <div style={{ display: "flex", gap: 16, alignItems: "end", flexWrap: "wrap" }}>
           <label style={campo}>
+            Cachos de cada açaizeira no ano
+            <input type="number" min={0} name="cachosPorPalmeiraNoAno" defaultValue={cachosNoAno || ""} required style={inputCampo} />
+          </label>
+          <label style={campo}>
             Cachos para dar 1 lata
             <input type="number" min={0} name="cachosPorLata" defaultValue={p.cachosPorLata || ""} required style={inputCampo} />
+          </label>
+          <label style={campo}>
+            Pronto em, de
+            <input type="number" min={0} name="mesesAteProntoDe" defaultValue={p.mesesAteProntoDe ?? 6} required style={inputCampo} />
+          </label>
+          <label style={campo}>
+            até (meses)
+            <input type="number" min={0} name="mesesAteProntoAte" defaultValue={p.mesesAteProntoAte ?? 7} required style={inputCampo} />
           </label>
           <label style={campo}>
             Valor da lata na previsão
@@ -68,6 +83,20 @@ export default async function PlantasPage() {
         </div>
       </form>
 
+      <div style={{ ...card, marginBottom: 28 }}>
+        <h3 style={{ fontFamily: "Georgia, serif", fontSize: 22, marginTop: 0 }}>{p.anoCorrente}, o começo</h3>
+        <p style={{ marginBottom: 0 }}>
+          Estamos começando agora. O açaí fica pronto em{" "}
+          {p.mesesAteProntoDe === p.mesesAteProntoAte
+            ? `${fmt(p.mesesAteProntoDe)} ${p.mesesAteProntoDe === 1 ? "mês" : "meses"}, em ${p.prontoDe}`
+            : `${fmt(p.mesesAteProntoDe)} a ${fmt(p.mesesAteProntoAte)} meses, de ${p.prontoDe} a ${p.prontoAte}`}
+          . A previsão de {p.anoCorrente} não usa o semestre. Até essa data, o previsto neste ano é{" "}
+          <strong>{faixa(p.latasPrevistasNoAno, p.latasPrevistasNoAnoMax)} {p.latasPrevistasNoAno === 1 && p.latasPrevistasNoAnoMax === 1 ? "lata" : "latas"}</strong>.
+          O que entrar antes é a mais: <strong>{fmt(p.latasAMaisNoAno)} {p.latasAMaisNoAno === 1 ? "lata" : "latas"}</strong>.
+          A casa entra nesse volume e não entra no caixa.
+        </p>
+      </div>
+
       {pronto ? (
         <>
           <p>
@@ -75,12 +104,14 @@ export default async function PlantasPage() {
             <strong>{fmt(p.total)}</strong> pés de pequeno, médio e grande, contados como uma unidade cada.
           </p>
           <p>
-            A Embrapa descreve de <strong>6 a 8 cachos por açaizeira no ano</strong>.{" "}
+            {fmt(p.quantidadeJaProduzem)} já produzem × {fmt(cachosNoAno)} cachos no ano ={" "}
+            <strong>{ano ? fmt(ano.cachos) : "—"} cachos no ano</strong>. Isso dividido por {fmt(p.cachosPorLata)} cachos
+            de uma lata = <strong>{ano ? fmt(ano.latas) : "—"} latas no ano</strong>.{" "}
+            A tabela abaixo é o ano cheio, contado só depois que o açaí fica pronto. Ela não é a base de {p.anoCorrente}.{" "}
             {p.repartoPelaSafra
-              ? "Essa parte do ano segue os meses em que o sítio já tirou mais açaí."
-              : "Ainda há pouca safra lançada, então o ano se reparte em partes iguais."}{" "}
-            Uma lata sai de <strong>{p.cachosPorLata} {p.cachosPorLata === 1 ? "cacho" : "cachos"}</strong>. O valor da
-            lata é {p.fontePreco === "informado" ? "o que você informou" : p.fontePreco === "ultima" ? "o da última produção lançada" : "ainda sem produção lançada"}.
+              ? "Os meses seguem a safra que o sítio já tirou."
+              : "Ainda há pouca safra lançada, então os meses saem em partes iguais."}{" "}
+            O valor da lata é {p.fontePreco === "informado" ? "o que você informou" : p.fontePreco === "ultima" ? "o da última produção lançada" : "ainda sem produção lançada"}.
           </p>
           <div style={{ overflowX: "auto" }}>
             <table style={{ width: "100%", borderCollapse: "collapse", background: "#fffdf8" }}>
@@ -89,7 +120,6 @@ export default async function PlantasPage() {
                   <th style={{ padding: 8 }}>Período</th>
                   <th style={{ padding: 8 }}>Cachos no período</th>
                   <th style={{ padding: 8 }}>Latas previstas</th>
-                  <th style={{ padding: 8 }}>Já tiradas</th>
                   <th style={{ padding: 8 }}>Valor da lata</th>
                   <th style={{ padding: 8 }}>Faturamento</th>
                 </tr>
@@ -103,7 +133,6 @@ export default async function PlantasPage() {
                     </td>
                     <td style={{ padding: 8 }}>{faixa(item.cachos, item.cachosMax)}</td>
                     <td style={{ padding: 8 }}>{faixa(item.latas, item.latasMax)}</td>
-                    <td style={{ padding: 8 }}>{fmt(item.latasTiradas)}</td>
                     <td style={{ padding: 8 }}>
                       {item.valorMedioLata == null ? "sem produção lançada" : brl(item.valorMedioLata)}
                     </td>
@@ -118,8 +147,8 @@ export default async function PlantasPage() {
             </table>
           </div>
           <p style={{ color: "#5c4a32" }}>
-            Latas previstas olham para a frente, na parte do ano indicada. Já tiradas são a produção mais a casa nos
-            últimos meses desse prazo. A casa não entra no caixa. O faturamento usa o valor da lata da previsão.
+            Essas latas só entram na conta a partir de {p.prontoDe}
+            {p.prontoDe === p.prontoAte ? "" : ` a ${p.prontoAte}`}. O que já entrou em {p.anoCorrente} está na linha de a mais, acima.
           </p>
           {(p.historico ?? []).length > 0 ? (
             <>
@@ -151,7 +180,7 @@ export default async function PlantasPage() {
         </>
       ) : (
         <p>
-          Informe quantos cachos dão uma lata para ver o trimestre, o semestre e o ano.
+          Informe quantos cachos cada açaizeira dá no ano e quantos cachos formam uma lata. A conta é sempre Já produzem × cachos no ano, dividido pelos cachos de uma lata.
         </p>
       )}
     </div>

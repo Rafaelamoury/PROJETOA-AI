@@ -45,6 +45,15 @@ export type Plantas = {
   valorLataPrevisao: number | null;
   fontePreco: "informado" | "ultima" | "sem";
   historico: ContagemPlantas[];
+  cachosPorPalmeiraNoAno: number;
+  mesesAteProntoDe: number;
+  mesesAteProntoAte: number;
+  anoCorrente: number;
+  latasPrevistasNoAno: number;
+  latasPrevistasNoAnoMax: number;
+  latasAMaisNoAno: number;
+  prontoDe: string;
+  prontoAte: string;
 };
 
 export type Producao = {

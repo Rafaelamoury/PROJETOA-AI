@@ -9,6 +9,9 @@ public static class SchemaPatch
         await db.Database.EnsureCreatedAsync();
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN QuantidadeJaProduzem INTEGER NOT NULL DEFAULT 0");
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN CachosPorLata INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN CachosPorPalmeiraNoAno INTEGER NOT NULL DEFAULT 0");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN MesesAteProntoDe INTEGER NOT NULL DEFAULT 6");
+        await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN MesesAteProntoAte INTEGER NOT NULL DEFAULT 7");
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN MesesParaMadurar INTEGER NOT NULL DEFAULT 0");
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN PalmeirasPorPe INTEGER NOT NULL DEFAULT 2");
         await TryAlter("ALTER TABLE EstoquesPlantas ADD COLUMN PesComTresPalmeiras INTEGER NOT NULL DEFAULT 0");
